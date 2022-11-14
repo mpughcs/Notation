@@ -1,10 +1,5 @@
 # MusicTheoryApp
-This project uses the [Rust Music Theory](https://github.com/ozankasikci/rust-music-theory) library to offer users a way to interface with music theory concepts in a command line application. Deve
-
-
-
-
-
+This project builds upon the [Rust Music Theory Library](https://github.com/ozankasikci/rust-music-theory) to offer users a way to interface with music theory concepts in a command line application. The application is currently in early development by [Max Pugh](https://github.com/mpughcs)
 
 
 # How to run
@@ -36,7 +31,7 @@ $ cargo run
     : 1
     Enter the tonic of the scale: C
     Enter the mode of the scale: Ionian 
-    Enter the direction of the scale: Asc
+    Enter the direction of the scale(ASC or DESC): Asc
     C
     D
     E
@@ -45,13 +40,14 @@ $ cargo run
     A
     B
  ```
-
+# Music Theory Concepts Implemented 
+- If you are unfamiliar with music theory concepts or unsure if the code is producing the correct output, I found this helpful [reference](https://www.thejazzpianosite.com/jazz-piano-lessons/the-basics/modes/) that covers some of the basic concepts implemented in this project. It can be used to 
 # Feature Roadmap
 <!-- # make checklist  -->
 - [x] View notes in any scale
+- [x] Help
+- [x] Exit 
 - [ ] View notes in a chord
 - [ ] Create chord progression
-- [ ] Help
-- [x] Exit 
 - [ ] Make notes and scales audible
 - [ ] Make chords audible
