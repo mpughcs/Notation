@@ -20,7 +20,7 @@ fn view_notes_in_scale(){
 
     let tonic:String = inline_user_input("Enter the tonic of the scale: ");
     let mode:String = inline_user_input("Enter the mode of the scale: ");
-    let direction:String = inline_user_input("Enter the direction of the scale: ");
+    let direction:String = inline_user_input("Enter the direction of the scale (asc/desc): ");
 
     // converting user inputs into the correct types
 
@@ -55,7 +55,47 @@ fn view_notes_in_scale(){
 }
 
 
+fn help(){
+    // scroll up
+   
+    println!("
+    Notes as strings:
+    'C' | 'c' => C,
+    'Cs' | 'cs' => C#,
+    'D' | 'd' => D,
+    'Ds' | 'ds' => D#,
+    'E' | 'e' => E,
+    'F' | 'f' => F,
+    'Fs' | 'fs' => F#,
+    'G' | 'g' => G,
+    'Gs' | 'gs' => G#,
+    'A' | 'a' => A,
+    'As' | 'as' => A#,
+    'B' | 'b' => B,
+    
+    Modes of the major scale:
+    'Ionian' | 'ionian' => Ionian,
+        -contains the notes: 1 2 3 4 5 6 7
 
+    'Dorian' | 'dorian' => Dorian,
+        -contains the notes: 1 2 b3 4 5 6 b7
+
+    'Phrygian' | 'phrygian' => Phrygian,
+        -contains the notes: 1 b2 b3 4 5 b6 b7
+
+    'Lydian' | 'lydian' => Lydian,
+        -contains the notes: 1 2 3 #4 5 6 7
+
+    'Mixolydian' | 'mixolydian' => Mixolydian,
+        -contains the notes: 1 2 3 4 5 6 b7
+
+    'Aeolian' | 'aeolian' => Aeolian,
+        -contains the notes: 1 2 b3 4 5 b6 b7
+
+    'Locrian' | 'locrian' => Locrian,
+        -contains the notes: 1 b2 b3 4 b5 b6 b7
+    ");
+}
 // entry point for the program
 
 fn display_options(){
@@ -79,7 +119,7 @@ fn display_options(){
             "1" => view_notes_in_scale(),
             "2" => println!("2"),
             "3" => println!("3"),
-            "4" => println!("help"),
+            "4" => help(),
             "5" => break,
             _ => println!("invalid input"),
         }

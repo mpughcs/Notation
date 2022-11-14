@@ -53,5 +53,5 @@ $ cargo run
 - [ ] Create chord progression
 - [ ] Help
 - [x] Exit 
-- [ ] Implement more music theory concepts
--  
+- [ ] Make notes and scales audible
+- [ ] Make chords audible
