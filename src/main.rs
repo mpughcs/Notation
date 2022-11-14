@@ -1,14 +1,15 @@
 extern crate rust_music_theory as rustmt;
 use rustmt::note::{Note, Notes, PitchClass};
 use rustmt::scale::{Scale, ScaleType, Mode, Direction};
-use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
+// use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};       
 use text_io::scan;
 use std::io::Write; // <--- bring flush() into scope
 use std::io;
 
+
 // This is a helper function that makes inline input easier.
 fn inline_user_input(prompt: &str) -> String {
-    let mut to_return= String::new();
+    let mut to_return;
     print!("{}", prompt);
     io::stdout().flush().unwrap();
     scan!("{}\n", to_return);
@@ -22,7 +23,7 @@ fn view_notes_in_scale(){
     let direction:String = inline_user_input("Enter the direction of the scale (asc/desc): ");
 
     // converting user inputs into the correct types
-    let mode_from_reg: Mode = Mode::from_regex(&mode).unwrap().0;
+    let mode_from_string: Mode = Mode::from_regex(&mode).unwrap().0;
     let scale_direction: Direction;
     let tonic = &tonic[..]; // convert input into a &str
     if direction.to_uppercase() =="ASC"{
@@ -36,10 +37,10 @@ fn view_notes_in_scale(){
 
     // creating scale object
     let usr_scale = Scale::new(
-        ScaleType::from_mode(mode_from_reg),    // scale type
+        ScaleType::from_mode(mode_from_string),    // scale type
         PitchClass::from_str(tonic).unwrap(),    // tonic
         4,                      // octave
-        Some(mode_from_reg),     // scale mode
+        Some(mode_from_string),     // scale mode
         scale_direction,   // scale direction
     ).unwrap();
     let user_notes = usr_scale.notes();
@@ -49,6 +50,10 @@ fn view_notes_in_scale(){
         println!("{}", note);
     }
 }
+
+
+// takes in 
+// returns a vector containing the notes in a scale 
 
 
 
