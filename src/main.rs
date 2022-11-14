@@ -1,7 +1,7 @@
 extern crate rust_music_theory as rustmt;
 use rustmt::note::{Note, Notes, PitchClass};
 use rustmt::scale::{Scale, ScaleType, Mode, Direction};
-// use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
+use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
 use text_io::scan;
 use std::io::Write; // <--- bring flush() into scope
 use std::io;
@@ -17,13 +17,11 @@ fn inline_user_input(prompt: &str) -> String {
 
 fn view_notes_in_scale(){
     // reading user inputs into variables
-
     let tonic:String = inline_user_input("Enter the tonic of the scale: ");
     let mode:String = inline_user_input("Enter the mode of the scale: ");
     let direction:String = inline_user_input("Enter the direction of the scale (asc/desc): ");
 
     // converting user inputs into the correct types
-
     let mode_from_reg: Mode = Mode::from_regex(&mode).unwrap().0;
     let scale_direction: Direction;
     let tonic = &tonic[..]; // convert input into a &str
@@ -35,8 +33,6 @@ fn view_notes_in_scale(){
         println!("Invalid direction. Defaulting to ascending.");
         scale_direction = Direction::Ascending;
     }
-
-
 
     // creating scale object
     let usr_scale = Scale::new(
@@ -53,6 +49,7 @@ fn view_notes_in_scale(){
         println!("{}", note);
     }
 }
+
 
 
 fn help(){
@@ -126,7 +123,6 @@ fn display_options(){
     }
 }
 fn main() {
-    //
     display_options();
 
 
