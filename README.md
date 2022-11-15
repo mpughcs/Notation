@@ -41,7 +41,7 @@ $ cargo run
     B
  ```
 # Music Theory Concepts Implemented 
-- If you are unfamiliar with music theory concepts or unsure if the code is producing the correct output, I found this helpful [reference](https://www.thejazzpianosite.com/jazz-piano-lessons/the-basics/modes/) that covers some of the basic concepts implemented in this project. It can be used to 
+- If you are unfamiliar with music theory concepts or unsure if the code is producing the correct output, I found this helpful [reference](https://www.thejazzpianosite.com/jazz-piano-lessons/the-basics/modes/) that covers some of the basic concepts implemented in this project. 
 # Feature Roadmap
 <!-- # make checklist  -->
 - [x] View notes in any scale
