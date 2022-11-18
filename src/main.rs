@@ -4,7 +4,7 @@ use rustmt::scale::{Scale, ScaleType, Mode, Direction};
 // use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};       
 use text_io::scan;
 use std::io::Write; // <--- bring flush() into scope
-use std::io;
+use std::{io, vec};
 
 
 // This is a helper function that makes inline input easier.
@@ -14,6 +14,16 @@ fn inline_user_input(prompt: &str) -> String {
     io::stdout().flush().unwrap();
     scan!("{}\n", to_return);
     return to_return;
+}
+fn scale_as_vector(tonic: PitchClass,mode: Mode, direction: Direction ) -> Vec<Note> {
+    let mut scale1 = Scale::new(ScaleType::from_mode(mode), tonic, 4,Some(mode),direction).unwrap();
+    return scale1.notes();
+}
+
+fn print_scale(scale: Vec<Note>) {
+    for note in scale {
+        println!("{}", note);
+    }
 }
 
 fn view_notes_in_scale(){
@@ -106,10 +116,7 @@ fn display_options(){
     println!("This program will allow you to interact with the Rust Music Theory library.");
     println!("You can create notes, scales, chords!");
     loop{
-
         println!("Choose from one of the following options: \n");
-
-
         println!("  1. view notes in a scale");
         println!("  2. view notes in a chord");
         println!("  3. create chord progression");
@@ -126,9 +133,12 @@ fn display_options(){
             _ => println!("invalid input"),
         }
     }
+    
+
 }
 fn main() {
+    // let scale2= scale_as_vector(PitchClass::A, Mode::Locrian, Direction::Ascending);
+    // print_scale(scale2);
     display_options();
-
-
+    
 }
