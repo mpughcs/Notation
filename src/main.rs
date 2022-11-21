@@ -5,6 +5,8 @@ use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality, self}
 use text_io::scan;
 use std::io::Write; // <--- bring flush() into scope
 use std::{io, vec};
+use colored::Colorize;
+
 
 fn help(){
 
@@ -135,9 +137,14 @@ fn view_notes_in_chord(){
 
 fn display_options(){
     print! ("\x1B[2J\x1B[1;1H"); 
-    println!("Welcome to the Rust Music Theory Interactive Program!");
-    println!("This program will allow you to interact with the Rust Music Theory library.");
-    println!("You can create notes, scales, chords!");
+    println!(
+        "{}\n > {}\n > {}\n",
+        format!("Welcome to the Rust Music Theory Interactive Program!").bold().green(),
+        format!("This program will allow you to interact with the Rust Music Theory library.").green(),
+        format!("You can create notes, scales, chords!").green(),
+   
+    );
+   
     loop{
         println!("Choose from one of the following options: \n");
         println!("  1. view notes in a scale");
