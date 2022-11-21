@@ -1,4 +1,5 @@
-# MusicTheoryApp
+# Notation v.0.0.2
+
 This project builds upon the [Rust Music Theory Library](https://github.com/ozankasikci/rust-music-theory) to offer users a way to interface with music theory concepts in a command line application. The application is currently in early development by [Max Pugh](https://github.com/mpughcs)
 
 
