@@ -6,6 +6,11 @@ use text_io::scan;
 use std::io::Write; // <--- bring flush() into scope
 use std::{io, vec};
 use colored::Colorize;
+mod chord_progression;
+
+use chord_progression::chord_progression::print_chords;
+
+// use method print chords from chord_progression.rs
 
 
 fn help(){
