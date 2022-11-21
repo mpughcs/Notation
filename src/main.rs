@@ -10,7 +10,7 @@ fn help(){
 
     // scroll up
    
-    println!("
+println!("
     Notes as strings:
     'C' | 'c' => C,
     'Cs' | 'cs' => C#,
@@ -115,10 +115,18 @@ fn view_notes_in_chord(){
     let extension: String = inline_user_input("Enter the superscript number of the chord (3, 7, maj7, etc): ");
     let root: &str = &root[..]; 
     let quality: &str = &quality[..]; 
+    let extension: &str = &extension[..]; 
 
 
 
 
+    // store quality as a Quality converted from &str regex to Quality
+    let quality_from_string:ChordQuality= ChordQuality::from_regex(quality).unwrap().0;
+    let chord = Chord::new(PitchClass::from_str(root).unwrap(), quality_from_string, ChordNumber::from_regex(extension).unwrap().0);
+    let user_notes:Vec<Note>= chord.notes();
+    for note in user_notes {
+        println!("{}", note);
+    }
 }
 
 
