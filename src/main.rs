@@ -139,7 +139,7 @@ fn display_options(){
     print! ("\x1B[2J\x1B[1;1H"); 
     println!(
         "{}\n > {}\n > {}\n",
-        format!("Welcome to the Rust Music Theory Interactive Program!").bold().green(),
+        format!("Welcome to Notation!").bold().green().italic(),
         format!("This program will allow you to interact with the Rust Music Theory library.").green(),
         format!("You can create notes, scales, chords!").green(),
    
