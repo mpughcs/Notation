@@ -51,6 +51,7 @@ println!("
     ");
 }
 
+
 // This is a helper function that makes inline input easier.
 fn inline_user_input(prompt: &str) -> String {
     let mut to_return;
@@ -63,6 +64,8 @@ fn scale_as_vector(tonic: PitchClass,mode: Mode, direction: Direction ) -> Vec<N
     let mut scale1 = Scale::new(ScaleType::from_mode(mode), tonic, 4,Some(mode),direction).unwrap();
     return scale1.notes();
 }
+
+
 
 fn print_scale(scale: Vec<Note>) {
     for note in scale {
@@ -118,10 +121,6 @@ fn view_notes_in_chord(){
     let root: &str = &root[..]; 
     let quality: &str = &quality[..]; 
     let extension: &str = &extension[..]; 
-
-
-
-
     // store quality as a Quality converted from &str regex to Quality
     let quality_from_string:ChordQuality= ChordQuality::from_regex(quality).unwrap().0;
     let chord = Chord::new(PitchClass::from_str(root).unwrap(), quality_from_string, ChordNumber::from_regex(extension).unwrap().0);
@@ -130,7 +129,11 @@ fn view_notes_in_chord(){
         println!("{}", note);
     }
 }
-
+fn chord_as_vector(root:PitchClass,quality:ChordQuality,extension:ChordNumber)-> Vec<Note>{
+    let chord = Chord::new(root,quality,extension);
+    let to_return:Vec<Note>=chord.notes();
+    return to_return
+}
 
 
 // entry point for the program
@@ -168,7 +171,8 @@ fn display_options(){
 }
 fn main() {
     // let scale2= scale_as_vector(PitchClass::A, Mode::Locrian, Direction::Ascending);
-    // print_scale(scale2);
+    // let test_chord= chord_as_vector(PitchClass::C, ChordQuality::Minor, ChordNumber::Triad );
+    // print_scale(test_chord);
     display_options();
     
 }
