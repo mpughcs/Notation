@@ -48,7 +48,7 @@ $ cargo run
 - [x] View notes in any scale
 - [x] Help
 - [x] Exit 
-- [ ] View notes in a chord
+- [x] View notes in a chord
 - [ ] Create chord progression
 - [ ] Make notes and scales audible
 - [ ] Make chords audible
