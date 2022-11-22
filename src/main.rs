@@ -77,6 +77,12 @@ fn print_scale(scale: Vec<Note>) {
         println!("{}", note);
     }
 }
+fn write_notes_to_file(scale: Vec<Note>) {
+    let mut file = std::fs::File::create("../scale.txt").unwrap();
+    for note in scale {
+        writeln!(file, "{},{}", note,note.octave).unwrap();
+    }
+}
 
 fn view_notes_in_scale(){
     // reading user inputs into variables
@@ -110,10 +116,12 @@ fn view_notes_in_scale(){
     let user_notes = usr_scale.notes();
 
     // print all notes in user_notes followed by a newline
-    for note in user_notes {
+    for note in &user_notes {
         println!("{}", note);
     }
+    write_notes_to_file(user_notes)
 }
+
 
 
 // takes in 
