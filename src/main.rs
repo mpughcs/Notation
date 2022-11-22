@@ -78,7 +78,7 @@ fn print_scale(scale: Vec<Note>) {
     }
 }
 fn write_notes_to_file(scale: Vec<Note>) {
-    let mut file = std::fs::File::create("../scale.txt").unwrap();
+    let mut file = std::fs::File::create("../notes.txt").unwrap();
     for note in scale {
         writeln!(file, "{},{}", note,note.octave).unwrap();
     }
