@@ -6,6 +6,9 @@ use text_io::scan;
 use std::io;
 use colored::Colorize;
 use std::io::{stdin, stdout, Read, Write};
+mod chord_progression;
+use crate::chord_progression::chord_progression::*;
+
 
 fn pause() {
     let mut stdout = stdout();
@@ -15,7 +18,6 @@ fn pause() {
 }
 
         
-// mod chord_progression;
 
 
 // use method print chords from chord_progression.rs
@@ -73,10 +75,13 @@ fn inline_user_input(prompt: &str) -> String {
     scan!("{}\n", to_return);
     return to_return;
 }
-// fn scale_as_vector(tonic: PitchClass,mode: Mode, direction: Direction ) -> Vec<Note> {
-//     let scale1 = Scale::new(ScaleType::from_mode(mode), tonic, 4,Some(mode),direction).unwrap();
-//     return scale1.notes();
-// }
+
+
+
+fn scale_as_vector(tonic: PitchClass,mode: Mode, direction: Direction ) -> Vec<Note> {
+    let scale1 = Scale::new(ScaleType::from_mode(mode), tonic, 4,Some(mode),direction).unwrap();
+    return scale1.notes();
+}
 
 
 
@@ -192,10 +197,19 @@ fn display_options(){
     
 
 }
+
+
+
+fn test_progressions(){
+    let c1:ChordProgression= ChordProgression::new("251".to_string());
+    let prog_name=c1.get_name();
+    println!("{}",prog_name);
+}
 fn main() {
     // let scale2= scale_as_vector(PitchClass::A, Mode::Locrian, Direction::Ascending);
     // let test_chord= chord_as_vector(PitchClass::C, ChordQuality::Minor, ChordNumber::Triad );
     // print_scale(test_chord);
+    // test_progressions();
     display_options();
     
 }
