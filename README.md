@@ -15,8 +15,10 @@ Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasi
     * ```$ cargo run```
 ### CONVERTING NOTES TO PLAYABLE NOTES
 * after exiting the command line app, run cd ../ to enter the parent directory. 
+* Install the python package with the command
+    * ```$ pip install MIDIUtil```
 * Here you can view your notes in the file "notes.txt" which contains info about a note's pitch and octave.
-* run the command
+* run the commands
     * ``` $ python3 convert.py ```      
     this script will convert the notes in notes.txt to playable notes in via MIDI in the file "output.mid"
 * Output.mid can be played in any MIDI player.
