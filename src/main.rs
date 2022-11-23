@@ -144,10 +144,12 @@ fn view_notes_in_chord(){
     // store quality as a Quality converted from &str regex to Quality
     let quality_from_string:ChordQuality= ChordQuality::from_regex(quality).unwrap().0;
     let chord = Chord::new(PitchClass::from_str(root).unwrap(), quality_from_string, ChordNumber::from_regex(extension).unwrap().0);
-    let user_notes:Vec<Note>= chord.notes();
+    let user_notes:&Vec<Note>= &chord.notes();
     for note in user_notes {
         println!("{}", note);
     }
+    write_notes_to_file(user_notes);
+
 }
 
 // fn chord_as_vector(root:PitchClass,quality:ChordQuality,extension:ChordNumber)-> Vec<Note>{
