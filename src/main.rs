@@ -3,9 +3,18 @@ use rustmt::note::{Note, Notes, PitchClass};
 use rustmt::scale::{Scale, ScaleType, Mode, Direction};
 use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
 use text_io::scan;
-use std::io::Write; // <--- bring flush() into scope
 use std::io;
 use colored::Colorize;
+use std::io::{stdin, stdout, Read, Write};
+
+fn pause() {
+    let mut stdout = stdout();
+    stdout.write(b"Press Enter to continue...").unwrap();
+    stdout.flush().unwrap();
+    stdin().read(&mut [0]).unwrap();
+}
+
+        
 // mod chord_progression;
 
 
@@ -116,7 +125,8 @@ fn view_notes_in_scale(){
 
     // print all notes in user_notes followed by a newline
     print_scale(user_notes);
-    write_notes_to_file(user_notes)
+    write_notes_to_file(user_notes);
+    pause();
 }
 
 
