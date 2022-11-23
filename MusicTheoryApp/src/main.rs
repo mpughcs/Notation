@@ -1,8 +1,9 @@
 extern crate rust_music_theory as rustmt;
 use rustmt::note::{Note, Notes, PitchClass};
 use rustmt::scale::{Scale, ScaleType, Mode, Direction};
-use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
+use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality, self};
 use text_io::scan;
+use core::num;
 use std::f32::consts::PI;
 use std::io;
 use colored::Colorize;
@@ -189,7 +190,7 @@ fn display_options(){
         match input.as_str(){
             "1" => view_notes_in_scale(),
             "2" => view_notes_in_chord(),
-            "3" => println!("3"),
+            "3" => create_progression(),
             "4" => help(),
             "5" => break,
             _ => println!("invalid input"),
@@ -200,7 +201,28 @@ fn display_options(){
 }
 
 
-
+fn create_progression(){
+    let chord_name= inline_user_input("Enter the name of your chord progression: ");
+    let num_chords=inline_user_input("How many chords will be in your progression?: ").parse::<i32>().unwrap();
+    let mut i: i32=0;
+    let mut user_chords:ChordProgression= ChordProgression::new(chord_name);
+    
+    while i < num_chords{
+        println!("Chord {} ",format!("{}", (&i+1).to_string()));
+        let root:String= inline_user_input("Enter Root of the chord: ");
+        let quality:String= inline_user_input("Enter chord quality: ");
+        let extension: String = inline_user_input("Enter the superscript number of the chord (3, 7, maj7, etc): ");
+        let root: &str = &root[..]; 
+        let quality: &str = &quality[..]; 
+        let extension: &str = &extension[..]; 
+        // store quality as a Quality converted from &str regex to Quality
+        let quality_from_string:ChordQuality= ChordQuality::from_regex(quality).unwrap().0;
+        let chord = Chord::new(PitchClass::from_str(root).unwrap(), quality_from_string, ChordNumber::from_regex(extension).unwrap().0);
+        user_chords.add_chord(chord);
+        i+=1;
+    }
+    user_chords.print_prog()
+}
 // fn test_progressions(){
 //     let mut c1:ChordProgression= ChordProgression::new("251".to_string());
 //     let prog_name=c1.get_name();
