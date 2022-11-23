@@ -1,14 +1,13 @@
 extern crate rust_music_theory as rustmt;
 use rustmt::note::{Note, Notes, PitchClass};
 use rustmt::scale::{Scale, ScaleType, Mode, Direction};
-use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality, self};
+use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
 use text_io::scan;
 use std::io::Write; // <--- bring flush() into scope
-use std::{io, vec};
+use std::io;
 use colored::Colorize;
-mod chord_progression;
+// mod chord_progression;
 
-use chord_progression::chord_progression::print_chords;
 
 // use method print chords from chord_progression.rs
 
@@ -59,25 +58,25 @@ println!("
 
 // This is a helper function that makes inline input easier.
 fn inline_user_input(prompt: &str) -> String {
-    let mut to_return;
+    let to_return;
     print!("{}", prompt);
     io::stdout().flush().unwrap();
     scan!("{}\n", to_return);
     return to_return;
 }
-fn scale_as_vector(tonic: PitchClass,mode: Mode, direction: Direction ) -> Vec<Note> {
-    let mut scale1 = Scale::new(ScaleType::from_mode(mode), tonic, 4,Some(mode),direction).unwrap();
-    return scale1.notes();
-}
+// fn scale_as_vector(tonic: PitchClass,mode: Mode, direction: Direction ) -> Vec<Note> {
+//     let scale1 = Scale::new(ScaleType::from_mode(mode), tonic, 4,Some(mode),direction).unwrap();
+//     return scale1.notes();
+// }
 
 
 
-fn print_scale(scale: Vec<Note>) {
+fn print_scale(scale: &Vec<Note>) {
     for note in scale {
         println!("{}", note);
     }
 }
-fn write_notes_to_file(scale: Vec<Note>) {
+fn write_notes_to_file(scale: &Vec<Note>) {
     let mut file = std::fs::File::create("../notes.txt").unwrap();
     for note in scale {
         writeln!(file, "{},{}", note,note.octave).unwrap();
@@ -113,12 +112,10 @@ fn view_notes_in_scale(){
         Some(mode_from_string),     // scale mode
         scale_direction,   // scale direction
     ).unwrap();
-    let user_notes = usr_scale.notes();
+    let user_notes = &usr_scale.notes();
 
     // print all notes in user_notes followed by a newline
-    for note in &user_notes {
-        println!("{}", note);
-    }
+    print_scale(user_notes);
     write_notes_to_file(user_notes)
 }
 
@@ -142,11 +139,12 @@ fn view_notes_in_chord(){
         println!("{}", note);
     }
 }
-fn chord_as_vector(root:PitchClass,quality:ChordQuality,extension:ChordNumber)-> Vec<Note>{
-    let chord = Chord::new(root,quality,extension);
-    let to_return:Vec<Note>=chord.notes();
-    return to_return
-}
+
+// fn chord_as_vector(root:PitchClass,quality:ChordQuality,extension:ChordNumber)-> Vec<Note>{
+//     let chord = Chord::new(root,quality,extension);
+//     let to_return:Vec<Note>=chord.notes();
+//     return to_return
+// }
 
 
 // entry point for the program
