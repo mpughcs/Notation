@@ -3,6 +3,7 @@ use rustmt::note::{Note, Notes, PitchClass};
 use rustmt::scale::{Scale, ScaleType, Mode, Direction};
 use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
 use text_io::scan;
+use std::f32::consts::PI;
 use std::io;
 use colored::Colorize;
 use std::io::{stdin, stdout, Read, Write};
@@ -200,11 +201,19 @@ fn display_options(){
 
 
 
-fn test_progressions(){
-    let c1:ChordProgression= ChordProgression::new("251".to_string());
-    let prog_name=c1.get_name();
-    println!("{}",prog_name);
-}
+// fn test_progressions(){
+//     let mut c1:ChordProgression= ChordProgression::new("251".to_string());
+//     let prog_name=c1.get_name();
+
+//     let chord1 = Chord::new(PitchClass::B,ChordQuality::Major,ChordNumber::Seventh);
+//     let chord2 = Chord::new(PitchClass::C,ChordQuality::Minor,ChordNumber::Triad);
+//     c1.add_chord(chord1);
+//     c1.add_chord(chord2);
+  
+//     println!("Progression name: {}",prog_name);
+//     println!("Number of chords in Prog: {}",c1.get_num_chords());
+//     c1.print_prog();
+// }
 fn main() {
     // let scale2= scale_as_vector(PitchClass::A, Mode::Locrian, Direction::Ascending);
     // let test_chord= chord_as_vector(PitchClass::C, ChordQuality::Minor, ChordNumber::Triad );
