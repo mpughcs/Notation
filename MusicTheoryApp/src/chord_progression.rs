@@ -3,7 +3,7 @@ pub mod chord_progression{
 
     pub struct ChordProgression{
         prog_name: String,
-        chord_progression: Vec<Chord>,
+        pub chord_progression: Vec<Chord>,
         num_chords: i32,
     }
     impl ChordProgression{

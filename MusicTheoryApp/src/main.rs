@@ -5,7 +5,7 @@ use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality, self}
 use text_io::scan;
 use core::num;
 use std::f32::consts::PI;
-use std::io;
+use std::{io, fs};
 use colored::Colorize;
 use std::io::{stdin, stdout, Read, Write};
 mod chord_progression;
@@ -98,6 +98,23 @@ fn write_notes_to_file(scale: &Vec<Note>) {
         writeln!(file, "{},{}", note,note.octave).unwrap();
     }
 }
+fn append_notes_to_file(notes: &Vec<Note>){
+    let mut file = fs::OpenOptions::new().write(true).append(true).open("../notes.txt").unwrap();
+    for note in notes {
+        writeln!(file, "{},{}", note,note.octave).unwrap();
+    }
+}
+
+fn write_prog_to_file(to_write:&ChordProgression){
+    let mut i=0;
+    let mut file = fs::OpenOptions::new().write(true).append(true).open("../notes.txt").unwrap();
+    while i < to_write.get_num_chords(){
+        let iterator = i as usize;
+        let notes_to_add = chord_as_vector(to_write.chord_progression[iterator].root, to_write.chord_progression[iterator].quality,to_write.chord_progression[iterator].number);
+        append_notes_to_file(&notes_to_add);
+        i+=1;
+    }
+}
 
 fn view_notes_in_scale(){
     // reading user inputs into variables
@@ -159,11 +176,11 @@ fn view_notes_in_chord(){
 
 }
 
-// fn chord_as_vector(root:PitchClass,quality:ChordQuality,extension:ChordNumber)-> Vec<Note>{
-//     let chord = Chord::new(root,quality,extension);
-//     let to_return:Vec<Note>=chord.notes();
-//     return to_return
-// }
+fn chord_as_vector(root:PitchClass,quality:ChordQuality,extension:ChordNumber)-> Vec<Note>{
+    let chord = Chord::new(root,quality,extension);
+    let to_return:Vec<Note>=chord.notes();
+    return to_return
+}
 
 
 // entry point for the program
@@ -221,7 +238,7 @@ fn create_progression(){
         user_chords.add_chord(chord);
         i+=1;
     }
-    user_chords.print_prog()
+    write_prog_to_file(&user_chords);
 }
 // fn test_progressions(){
 //     let mut c1:ChordProgression= ChordProgression::new("251".to_string());
