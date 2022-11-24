@@ -1,5 +1,5 @@
 pub mod chord_progression{
-    use rustmt::chord::{Chord, self};
+    use rustmt::chord::{Chord};
 
     pub struct ChordProgression{
         prog_name: String,

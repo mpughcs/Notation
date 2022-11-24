@@ -12,6 +12,7 @@ mod chord_progression;
 use crate::chord_progression::chord_progression::*;
 
 
+
 fn pause() {
     let mut stdout = stdout();
     stdout.write(b"Press Enter to continue...").unwrap();
@@ -99,6 +100,7 @@ fn write_notes_to_file(scale: &Vec<Note>) {
     }
 }
 fn append_notes_to_file(notes: &Vec<Note>){
+    // handle error if file doesn't exist
     let mut file = fs::OpenOptions::new().write(true).append(true).open("../notes.txt").unwrap();
     for note in notes {
         writeln!(file, "{},{}", note,note.octave).unwrap();
@@ -130,6 +132,7 @@ fn view_notes_in_scale(){
     let direction:String = inline_user_input("Enter the direction of the scale (asc/desc): ");
 
     // converting user inputs into the correct types
+    // protect against invalid inputs
     let mode_from_string: Mode = Mode::from_regex(&mode).unwrap().0;
     let scale_direction: Direction;
     let tonic = &tonic[..]; // convert input into a &str
