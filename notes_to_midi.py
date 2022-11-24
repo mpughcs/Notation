@@ -81,21 +81,6 @@ def get_chords_from_file(filename):
           chords.append(chord_to_add)
   print(chords[0])
 
-'''
-2
--
-4
-F,4
-A,4
-C,5
-E,5
--
-3
-G,4
-A#,4
-D,5
-
-'''
 
 
 
@@ -163,3 +148,4 @@ def test_progression():
   
 
 process_scale()
+
