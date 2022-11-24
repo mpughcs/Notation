@@ -16,7 +16,16 @@ class Note:
     self.octave = octave
   def __repr__(self):
     return f"{self.name},{self.octave}"
-    
+
+
+class Chord:
+  note_list:Note =[]
+  length=len(note_list)
+  def add_note(self, note):
+    self.note_list.append(note)
+  def __repr__(self):
+    return str(self.note_list[0])
+
 def write_to_disk():
   with open("output.mid", 'wb') as outf:
     mf.writeFile(outf)
@@ -39,11 +48,31 @@ def get_notes_from_file(fileName):
         print("File not accessible")
     return list_of_notes
 
+def get_chords_from_file(filename):
+  list_of_chords=[]
+  num_chord=0
+  chord_to_add=Chord()
+  with open(filename) as f:
+    for i, line in enumerate(f):
+      if(i!=0 and line.strip()!='-'):
+        noteLine=line.strip().split(",") 
+        this_note = Note(noteLine[0],noteLine[1])
+        chord_to_add.add_note(this_note)
+        # print(this_note)
+      if(line.strip()=='-'):
+        list_of_chords.append(chord_to_add)
+        chord_to_add=Chord()
+        # print("bar encountered")
+      if(i==0):
+        num_chord=int(line.strip())
+  return list_of_chords
 
 
-   
+def print_chords(chords):
+  for i, chord in enumerate(chords):
+    print(chord)
 
-testscale=get_notes_from_file("notes.txt")
+
 
 def midi_from_note(note_name, octave):
 
@@ -56,13 +85,27 @@ def scale_to_midi(list_of_notes):
   channel = 0
   volume = 100
   for i,note in enumerate(list_of_notes):
-    # print(list_of_notes[i].name)
     pitch = midi_from_note(list_of_notes[i].name,list_of_notes[i].octave)          # C4 (middle C)
     time = i             # start on beat equal to it's index in the list of notes passed
     duration = 1         # 1 beat long
     mf.addNote(track, channel, pitch, time, duration, volume)
   write_to_disk()
 
+
+def progression_to_midi(list_of_chords):
+  channel = 0
+  volume = 100
+  for i,chord in enumerate(list_of_chords):
+    lengthOfChord=len(list_of_chords[0].note_list)
+    print(lengthOfChord)
+    for j in lengthOfChord:
+      thisChord=list_of_chords[i]
+      thisNote=thisNote[j]
+      pitch = midi_from_note(thisNote.name, thisNote.octave)          # C4 (middle C)
+      time = i             # start on beat equal to it's index in the list of notes passed
+      duration = 4         # 1 beat long
+      mf.addNote(track, channel, pitch, time, duration, volume)
+  write_to_disk()
 
 def chord_to_midi(list_of_notes):
   channel = 0
@@ -77,5 +120,9 @@ def chord_to_midi(list_of_notes):
 
 
 
-chord_to_midi(testscale)
+def process_scale():
+  notes=get_notes_from_file("notes.txt")
+  scale_to_midi(notes)
 
+
+process_scale()

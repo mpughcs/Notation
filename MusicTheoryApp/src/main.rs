@@ -112,6 +112,7 @@ fn write_prog_to_file(to_write:&ChordProgression){
         let iterator = i as usize;
         let notes_to_add = chord_as_vector(to_write.chord_progression[iterator].root, to_write.chord_progression[iterator].quality,to_write.chord_progression[iterator].number);
         append_notes_to_file(&notes_to_add);
+        writeln!(file,"-").unwrap();
         i+=1;
     }
 }
