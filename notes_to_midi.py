@@ -21,10 +21,13 @@ class Note:
 class Chord:
   note_list:Note =[]
   length=len(note_list)
+  def __init__(self)->None:
+    self.note_list = []
+    self.length = len(self.note_list)
   def add_note(self, note):
     self.note_list.append(note)
   def __repr__(self):
-    return str(self.note_list[0])
+    return str(self.note_list)
 
 def write_to_disk():
   with open("output.mid", 'wb') as outf:
@@ -48,25 +51,55 @@ def get_notes_from_file(fileName):
         print("File not accessible")
     return list_of_notes
 
+# trying to make function that reads notes.txt, first line is number of chords
+# then a "-" denotes a new chord which starts with the number of notes in the chord
+# then the notes in the chord, each on a new line, then a "-" for the next chord
+# this function should return a list of chords, each chord is a list of notes
 def get_chords_from_file(filename):
-  list_of_chords=[]
-  num_chord=0
-  chord_to_add=Chord()
-  with open(filename) as f:
-    for i, line in enumerate(f):
-      if(i!=0 and line.strip()!='-'):
-        noteLine=line.strip().split(",") 
-        this_note = Note(noteLine[0],noteLine[1])
-        chord_to_add.add_note(this_note)
-        # print(this_note)
-      if(line.strip()=='-'):
-        list_of_chords.append(chord_to_add)
-        chord_to_add=Chord()
-        # print("bar encountered")
-      if(i==0):
-        num_chord=int(line.strip())
-  return list_of_chords
+  chords=[]
+  with open("notes.txt") as file_in:
+    lines = []
+    for line in file_in:
+        lines.append(line.strip())
+        
+  numChords=lines[0]
+  for i, line in enumerate(lines):
+    if i==0:
+      continue
+    if line=="-":
+      num_notes=int(lines[i+1])
+      # print(num_notes)
+      counter=0
+      tonic_index=i+2
+      chord_to_add=Chord()
+      while counter<num_notes:
+        note_to_add=lines[tonic_index+counter]
+        chord_to_add.add_note(note_to_add)
+        print(note_to_add)
+        counter+=1
+        if(counter==num_notes):
+          chords.append(chord_to_add)
+  print(chords[0])
 
+'''
+2
+-
+4
+F,4
+A,4
+C,5
+E,5
+-
+3
+G,4
+A#,4
+D,5
+
+'''
+
+
+
+  
 
 def print_chords(chords):
   for i, chord in enumerate(chords):
@@ -124,5 +157,9 @@ def process_scale():
   notes=get_notes_from_file("notes.txt")
   scale_to_midi(notes)
 
+def test_progression():
+  chordList=get_chords_from_file("notes.txt")
+  print(chordList)
+  
 
 process_scale()

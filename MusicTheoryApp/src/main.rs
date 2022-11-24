@@ -108,11 +108,17 @@ fn append_notes_to_file(notes: &Vec<Note>){
 fn write_prog_to_file(to_write:&ChordProgression){
     let mut i=0;
     let mut file = fs::OpenOptions::new().write(true).append(true).open("../notes.txt").unwrap();
+    writeln!(file,"{}", to_write.get_num_chords()).unwrap();
+    writeln!(file,"-").unwrap();
     while i < to_write.get_num_chords(){
         let iterator = i as usize;
         let notes_to_add = chord_as_vector(to_write.chord_progression[iterator].root, to_write.chord_progression[iterator].quality,to_write.chord_progression[iterator].number);
+        let mut note_count=notes_to_add.len();
+        writeln!(file,"{}", note_count).unwrap();
         append_notes_to_file(&notes_to_add);
-        writeln!(file,"-").unwrap();
+        if(i!= to_write.get_num_chords()-1){
+            writeln!(file,"-").unwrap();
+        }
         i+=1;
     }
 }
