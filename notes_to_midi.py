@@ -1,9 +1,9 @@
-from midiutil.MidiFile import MIDIFile
 # create your MIDI object
+from midiutil.MidiFile import MIDIFile
 mf = MIDIFile(1)     # only 1 track
 track = 0   # the only track
-fileName='notes.txt'
 time = 0    # start at the beginning
+
 mf.addTrackName(track, time, "Sample Track")
 mf.addTempo(track, time, 120)
 
@@ -11,6 +11,7 @@ class Note:
   def __init__(self, name, octave):
     self.name = name
     self.octave = octave
+
   def __repr__(self):
     return f"{self.name},{self.octave}"
 
@@ -61,17 +62,19 @@ def get_chords_from_file(filename):
       continue
     if line=="-":
       num_notes=int(lines[i+1])
-      # print(num_notes)
+      print(num_notes)
       counter=0
       tonic_index=i+2
       chord_to_add=Chord()
       while counter<num_notes:
         note_to_add=lines[tonic_index+counter]
         chord_to_add.add_note(note_to_add)
-        # print(note_to_add)
+        print(note_to_add)
         counter+=1
         if(counter==num_notes):
           chords.append(chord_to_add)
+          # chord_to_add.note_list=[]
+  # print(chords)
   return(chords)
 
 
@@ -100,13 +103,15 @@ def scale_to_midi(list_of_notes):
 def progression_to_midi(chords):
   channel = 0
   volume = 100
+  print(chords)
   for i,chord in enumerate(chords):
     for j,note in enumerate(chord.note_list):
       note=Note(note.split(",")[0],note.split(",")[1])
       pitch = midi_from_note(note.name,note.octave)          # C4 (middle C)
-      time = i*2            # start on beat equal to it's index in the list of notes passed
-      duration = 2         # 1 beat long
+      time = i*2          # start on beat equal to it's index in the list of notes passed
+      duration = 2         # 2 beat long
       mf.addNote(track, channel, pitch, time, duration, volume)
+  print("reached here")
   write_to_disk()
 
 def single_chord_to_midi(list_of_notes):
@@ -127,11 +132,12 @@ def process_scale():
 
 def test_progression(file):
   chordList=get_chords_from_file(file)
-  # print(chordList==None)
+  print("reached")
   progression_to_midi(chordList)
   
 def scaleOrChord():
   while(True):
+  
     usr=input("Would you like to process a scale or progression? (s/p): ")
     if usr=="s":
       try:
@@ -155,5 +161,5 @@ def scaleOrChord():
     else:
       print("Invalid input, please try again")
     # test_progression()
-    
+
 scaleOrChord()
