@@ -1,14 +1,11 @@
 from midiutil.MidiFile import MIDIFile
-
 # create your MIDI object
 mf = MIDIFile(1)     # only 1 track
 track = 0   # the only track
 fileName='notes.txt'
-
 time = 0    # start at the beginning
 mf.addTrackName(track, time, "Sample Track")
 mf.addTempo(track, time, 120)
-
 
 class Note: 
   def __init__(self, name, octave):
@@ -16,7 +13,6 @@ class Note:
     self.octave = octave
   def __repr__(self):
     return f"{self.name},{self.octave}"
-
 
 class Chord:
   note_list:Note =[]
@@ -51,10 +47,7 @@ def get_notes_from_file(fileName):
         print("File not accessible")
     return list_of_notes
 
-# trying to make function that reads notes.txt, first line is number of chords
-# then a "-" denotes a new chord which starts with the number of notes in the chord
-# then the notes in the chord, each on a new line, then a "-" for the next chord
-# this function should return a list of chords, each chord is a list of notes
+
 def get_chords_from_file(filename):
   chords=[]
   with open(filename) as file_in:
@@ -82,22 +75,6 @@ def get_chords_from_file(filename):
   return(chords)
 
 
-'''
-2
--
-4
-F,4 .      this is f major seventh
-A,4
-C,5
-E,5
-
--
-3
-G,4         this is G minor triad
-A#,4
-D,5
-
-'''
 def print_chords(chords):
   for i, chord in enumerate(chords):
     print(chord)
@@ -119,12 +96,6 @@ def scale_to_midi(list_of_notes):
     duration = 1         # 1 beat long
     mf.addNote(track, channel, pitch, time, duration, volume)
   write_to_disk()
-
-
-
-# loops through chords, loops through each note in chord, adding them to midi file . each chord playes at time equal to it's index in the array
-
-
 
 def progression_to_midi(chords):
   channel = 0
@@ -150,7 +121,6 @@ def single_chord_to_midi(list_of_notes):
   write_to_disk()
 
 
-
 def process_scale():
   notes=get_notes_from_file("notes.txt")
   scale_to_midi(notes)
@@ -160,7 +130,6 @@ def test_progression(file):
   # print(chordList==None)
   progression_to_midi(chordList)
   
-
 def scaleOrChord():
   while(True):
     usr=input("Would you like to process a scale or progression? (s/p): ")
@@ -174,9 +143,9 @@ def scaleOrChord():
         print("Input Error, is notes.txt formatted correctly?")
       break
     elif usr=="p":
-      print("Processing progression")
       try:
         fileName=input("Enter the name of the progression: ")
+        print("Processing progression")
         test_progression(fileName)
         print("Progression processed")
         print("File saved as output.mid")
@@ -187,6 +156,4 @@ def scaleOrChord():
       print("Invalid input, please try again")
     # test_progression()
     
-
-# test_progression()
 scaleOrChord()
