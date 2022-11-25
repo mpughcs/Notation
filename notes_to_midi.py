@@ -57,7 +57,7 @@ def get_notes_from_file(fileName):
 # this function should return a list of chords, each chord is a list of notes
 def get_chords_from_file(filename):
   chords=[]
-  with open("notes.txt") as file_in:
+  with open(filename) as file_in:
     lines = []
     for line in file_in:
         lines.append(line.strip())
@@ -75,21 +75,32 @@ def get_chords_from_file(filename):
       while counter<num_notes:
         note_to_add=lines[tonic_index+counter]
         chord_to_add.add_note(note_to_add)
-        print(note_to_add)
+        # print(note_to_add)
         counter+=1
         if(counter==num_notes):
           chords.append(chord_to_add)
-  print(chords[0])
+  return(chords)
 
 
+'''
+2
+-
+4
+F,4 .      this is f major seventh
+A,4
+C,5
+E,5
 
+-
+3
+G,4         this is G minor triad
+A#,4
+D,5
 
-  
-
+'''
 def print_chords(chords):
   for i, chord in enumerate(chords):
     print(chord)
-
 
 
 def midi_from_note(note_name, octave):
@@ -110,22 +121,24 @@ def scale_to_midi(list_of_notes):
   write_to_disk()
 
 
-def progression_to_midi(list_of_chords):
+
+# loops through chords, loops through each note in chord, adding them to midi file . each chord playes at time equal to it's index in the array
+
+
+
+def progression_to_midi(chords):
   channel = 0
   volume = 100
-  for i,chord in enumerate(list_of_chords):
-    lengthOfChord=len(list_of_chords[0].note_list)
-    print(lengthOfChord)
-    for j in lengthOfChord:
-      thisChord=list_of_chords[i]
-      thisNote=thisNote[j]
-      pitch = midi_from_note(thisNote.name, thisNote.octave)          # C4 (middle C)
-      time = i             # start on beat equal to it's index in the list of notes passed
-      duration = 4         # 1 beat long
+  for i,chord in enumerate(chords):
+    for j,note in enumerate(chord.note_list):
+      note=Note(note.split(",")[0],note.split(",")[1])
+      pitch = midi_from_note(note.name,note.octave)          # C4 (middle C)
+      time = i*2            # start on beat equal to it's index in the list of notes passed
+      duration = 2         # 1 beat long
       mf.addNote(track, channel, pitch, time, duration, volume)
   write_to_disk()
 
-def chord_to_midi(list_of_notes):
+def single_chord_to_midi(list_of_notes):
   channel = 0
   volume = 100
   for i,note in enumerate(list_of_notes):
@@ -142,10 +155,38 @@ def process_scale():
   notes=get_notes_from_file("notes.txt")
   scale_to_midi(notes)
 
-def test_progression():
-  chordList=get_chords_from_file("notes.txt")
-  print(chordList)
+def test_progression(file):
+  chordList=get_chords_from_file(file)
+  # print(chordList==None)
+  progression_to_midi(chordList)
   
 
-process_scale()
+def scaleOrChord():
+  while(True):
+    usr=input("Would you like to process a scale or progression? (s/p): ")
+    if usr=="s":
+      try:
+        print("Processing scale")
 
+        process_scale()
+        print("Scale processed")
+      except:
+        print("Input Error, is notes.txt formatted correctly?")
+      break
+    elif usr=="p":
+      print("Processing progression")
+      try:
+        fileName=input("Enter the name of the progression: ")
+        test_progression(fileName)
+        print("Progression processed")
+        print("File saved as output.mid")
+      except:
+        print("Processing Error, is notes.txt formatted correctly?")
+      break
+    else:
+      print("Invalid input, please try again")
+    # test_progression()
+    
+
+# test_progression()
+scaleOrChord()

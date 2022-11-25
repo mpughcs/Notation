@@ -5,7 +5,7 @@ use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality, self}
 use text_io::scan;
 use core::num;
 use std::f32::consts::PI;
-use std::{io, fs};
+use std::{io, fs, clone};
 use colored::Colorize;
 use std::io::{stdin, stdout, Read, Write};
 mod chord_progression;
@@ -99,17 +99,21 @@ fn write_notes_to_file(scale: &Vec<Note>) {
         writeln!(file, "{},{}", note,note.octave).unwrap();
     }
 }
-fn append_notes_to_file(notes: &Vec<Note>){
+fn append_notes_to_file(notes: &Vec<Note>, file_name: &str) {
     // handle error if file doesn't exist
-    let mut file = fs::OpenOptions::new().write(true).append(true).open("../notes.txt").unwrap();
+    let mut file = fs::OpenOptions::new().write(true).append(true).open(file_name).unwrap();
     for note in notes {
         writeln!(file, "{},{}", note,note.octave).unwrap();
     }
 }
 
-fn write_prog_to_file(to_write:&ChordProgression){
+fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
     let mut i=0;
-    let mut file = fs::OpenOptions::new().write(true).append(true).open("../notes.txt").unwrap();
+    // if file doesn't exist, create it
+    let destination = format!("../{}.txt",file_name);
+    let mut file = std::fs::File::create(destination.clone()).unwrap();
+    
+    let mut file = fs::OpenOptions::new().write(true).append(true).open(destination.clone()).unwrap();
     writeln!(file,"{}", to_write.get_num_chords()).unwrap();
     writeln!(file,"-").unwrap();
     while i < to_write.get_num_chords(){
@@ -117,7 +121,7 @@ fn write_prog_to_file(to_write:&ChordProgression){
         let notes_to_add = chord_as_vector(to_write.chord_progression[iterator].root, to_write.chord_progression[iterator].quality,to_write.chord_progression[iterator].number);
         let mut note_count=notes_to_add.len();
         writeln!(file,"{}", note_count).unwrap();
-        append_notes_to_file(&notes_to_add);
+        append_notes_to_file(&notes_to_add,&destination);
         if(i!= to_write.get_num_chords()-1){
             writeln!(file,"-").unwrap();
         }
@@ -229,10 +233,11 @@ fn display_options(){
 
 
 fn create_progression(){
-    let chord_name= inline_user_input("Enter the name of your chord progression: ");
+    let prog_name= inline_user_input("Enter the name of your chord progression: ").to_owned();
     let num_chords=inline_user_input("How many chords will be in your progression?: ").parse::<i32>().unwrap();
     let mut i: i32=0;
-    let mut user_chords:ChordProgression= ChordProgression::new(chord_name);
+    let mut user_chords:ChordProgression= ChordProgression::new(prog_name.clone());
+    // convert prog_name to &str
     
     while i < num_chords{
         println!("Chord {} ",format!("{}", (&i+1).to_string()));
@@ -248,7 +253,9 @@ fn create_progression(){
         user_chords.add_chord(chord);
         i+=1;
     }
-    write_prog_to_file(&user_chords);
+    // pass chord progression and progto function that writes to file
+    write_prog_to_file(&user_chords, &prog_name);
+
 }
 // fn test_progressions(){
 //     let mut c1:ChordProgression= ChordProgression::new("251".to_string());
