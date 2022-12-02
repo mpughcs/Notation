@@ -1,19 +1,28 @@
-# Notation v.0.0.2
-
+# Notation
 Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasikci/rust-music-theory) to offer users a way to interface with music theory programmatically. The application is currently in early development by [Max Pugh](https://github.com/mpughcs)
+# Version 0.0.3 Features
+<!-- create indent -->
+* Notation now supports chord progressions! which are a series of chords that are played in succession.
+* When a user creates a chord progression, it is written to a file called "\<progression_name>.txt" in the parent directory.
+* The user can then convert the chord progression and notes to playable audio by running the command
+    * ```$ python3 notes_to_midi.py``` and following the instructions in the terminal.
 
+
+### [Click this Link for example execution](https://www.youtube.com/watch?v=5GBCHi0R9Ak&feature=youtu.be)
 
 # How to run
-### Installing Rust and Cargo
+
+## Installing Rust and Cargo
 * Follow this link to install [Rust](https://doc.rust-lang.org/book/ch01-01-installation.html)
 * Once install run the command to ensure Cargo is installed
     * ```$ cargo --version```
-### Running the Program
+## Running the Program
 * Clone the repository
 * Navigate to the directory Notation/MusicTheoryApp in the terminal
 * Run the command
+
     * ```$ cargo run```
-### CONVERTING NOTES TO PLAYABLE NOTES
+## Converting notes to playable audio
 * after exiting the command line app, run cd ../ to enter the parent directory. 
 * Install the python package with the command
     * ```$ pip install MIDIUtil```
@@ -22,37 +31,20 @@ Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasi
     * ``` $ python3 notes_to_midi.py ```      
     this script will convert the notes in notes.txt to playable notes in via MIDI in the file "output.mid"
 * Output.mid can be played in any MIDI player.
+---
+### Note about outputting .mid files on Mac OS
+* .mid files are not playable by default on Mac OS. To play .mid files on Mac OS, you must install a MIDI player. 
+* There is a command line MIDI player called [timidity](https://www.mankier.com/1/timidity) that can be installed with the command
+    * ```$ brew install timidity```
+    * Once installed, you can play the .mid file with the command
+        * ```$ timidity output.mid```
+    * This will produce a playable audio file in the terminal. which can be opened with the command
+        * ```$ open output.ogg```
+* Another option is to install a GUI MIDI player. I recommend [MuseScore](https://musescore.org/en/download) which is free and very popular among composers and students.
 
-### Example execution
-```cpp
-$ cargo run
+---
 
-    Welcome to the Rust Music Theory Interactive Program!
-    This program will allow you to interact with the Rust Music Theory library.
-    You can create notes, scales, chords!
-    Choose from one of the following options: 
 
-        1. view notes in a scale
-        2. view notes in a chord
-        3. create chord progression
-        4. help
-        5. exit
-    : 1
-    Enter the tonic of the scale: C
-    Enter the mode of the scale: Ionian 
-    Enter the direction of the scale(ASC or DESC): Asc
-    C
-    D
-    E
-    F
-    G
-    A
-    B
- ```
-# Version 0.0.2 Features
-<!-- create indent -->
-* In version 0.0.2, in addition to being able to view notes in a scale and chord, the program also write's these notes to a file called "notes.txt" in the parent directory. 
-* The parent directory not contains a python script "notes_to_midi.py" that converts the notes in the "notes.txt" file to a midi file called "output.mid" in the parent directory.
 
 
 

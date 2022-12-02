@@ -62,14 +62,14 @@ def get_chords_from_file(filename):
       continue
     if line=="-":
       num_notes=int(lines[i+1])
-      print(num_notes)
+      # print(num_notes)
       counter=0
       tonic_index=i+2
       chord_to_add=Chord()
       while counter<num_notes:
         note_to_add=lines[tonic_index+counter]
         chord_to_add.add_note(note_to_add)
-        print(note_to_add)
+        # print(note_to_add)
         counter+=1
         if(counter==num_notes):
           chords.append(chord_to_add)
@@ -103,7 +103,7 @@ def scale_to_midi(list_of_notes):
 def progression_to_midi(chords):
   channel = 0
   volume = 100
-  print(chords)
+  # print(chords)
   for i,chord in enumerate(chords):
     for j,note in enumerate(chord.note_list):
       note=Note(note.split(",")[0],note.split(",")[1])
@@ -111,7 +111,7 @@ def progression_to_midi(chords):
       time = i*2          # start on beat equal to it's index in the list of notes passed
       duration = 2         # 2 beat long
       mf.addNote(track, channel, pitch, time, duration, volume)
-  print("reached here")
+  # print("reached here")
   write_to_disk()
 
 def single_chord_to_midi(list_of_notes):
@@ -132,8 +132,9 @@ def process_scale():
 
 def test_progression(file):
   chordList=get_chords_from_file(file)
-  print("reached")
+  print("File read")
   progression_to_midi(chordList)
+  print("Midi file written")
   
 def scaleOrChord():
   while(True):
@@ -150,16 +151,15 @@ def scaleOrChord():
       break
     elif usr=="p":
       try:
-        fileName=input("Enter the name of the progression: ")
-        print("Processing progression")
+        fileName=input("Enter the name of progression with extension (ex. prog.txt): ")
+        print("\nProcessing progression")
         test_progression(fileName)
         print("Progression processed")
         print("File saved as output.mid")
       except:
-        print("Processing Error, is notes.txt formatted correctly?")
+        print("Processing Error, is ",fileName,"formatted correctly?")
       break
     else:
       print("Invalid input, please try again")
-    # test_progression()
 
 scaleOrChord()
