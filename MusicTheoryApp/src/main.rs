@@ -136,7 +136,11 @@ fn view_notes_in_scale(){
     let direction:String = inline_user_input("Enter the direction of the scale (asc/desc): ");
 
     // converting user inputs into the correct types
-    // protect against invalid inputs
+    
+    // check for none values
+    
+
+    
     let mode_from_string: Mode = Mode::from_regex(&mode).unwrap().0;
     let scale_direction: Direction;
     let tonic = &tonic[..]; // convert input into a &str
@@ -179,14 +183,20 @@ fn view_notes_in_chord(){
     let root: &str = &root[..]; 
     let quality: &str = &quality[..]; 
     let extension: &str = &extension[..]; 
+    //use match to check if the root is a valid note
+  
     // store quality as a Quality converted from &str regex to Quality
     let quality_from_string:ChordQuality= ChordQuality::from_regex(quality).unwrap().0;
+
     let chord = Chord::new(PitchClass::from_str(root).unwrap(), quality_from_string, ChordNumber::from_regex(extension).unwrap().0);
+    
+
     let user_notes:&Vec<Note>= &chord.notes();
     for note in user_notes {
         println!("{}", note);
     }
     write_notes_to_file(user_notes);
+    pause();
 
 }
 
@@ -257,19 +267,7 @@ fn create_progression(){
     write_prog_to_file(&user_chords, &prog_name);
 
 }
-// fn test_progressions(){
-//     let mut c1:ChordProgression= ChordProgression::new("251".to_string());
-//     let prog_name=c1.get_name();
 
-//     let chord1 = Chord::new(PitchClass::B,ChordQuality::Major,ChordNumber::Seventh);
-//     let chord2 = Chord::new(PitchClass::C,ChordQuality::Minor,ChordNumber::Triad);
-//     c1.add_chord(chord1);
-//     c1.add_chord(chord2);
-  
-//     println!("Progression name: {}",prog_name);
-//     println!("Number of chords in Prog: {}",c1.get_num_chords());
-//     c1.print_prog();
-// }
 fn main() {
     // let scale2= scale_as_vector(PitchClass::A, Mode::Locrian, Direction::Ascending);
     // let test_chord= chord_as_vector(PitchClass::C, ChordQuality::Minor, ChordNumber::Triad );
