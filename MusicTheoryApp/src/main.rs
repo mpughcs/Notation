@@ -5,9 +5,9 @@ use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality, self}
 use text_io::scan;
 use core::num;
 use std::f32::consts::PI;
-use std::{io, fs, clone};
+use std::{io, fs, clone, string};
 use colored::Colorize;
-use std::io::{stdin, stdout, Read, Write};
+use std::io::{stdin, stdout, Read, Write, ErrorKind};
 mod chord_progression;
 use crate::chord_progression::chord_progression::*;
 
@@ -20,7 +20,75 @@ fn pause() {
     stdin().read(&mut [0]).unwrap();
 }
 
-        
+
+// derive debug for all enums
+#[derive(Debug)]
+enum EntryError {
+    TonicError,
+    ModeError,
+    DirectionError,
+   
+}
+
+// TODO: implement corrisoponding sharp and flat enums as "ors" in the match statement
+fn check_tonic(input: String) -> Result<PitchClass, EntryError>{
+    match(input.to_uppercase().as_str()){
+        "C" => Ok(PitchClass::C),
+        "CS"  => Ok(PitchClass::Cs),
+        "D" => Ok(PitchClass::D),
+        "DS" => Ok(PitchClass::Ds),
+        "E" => Ok(PitchClass::E),
+        "F" => Ok(PitchClass::F),
+        "FS"=> Ok(PitchClass::Fs),
+        "G"  => Ok(PitchClass::G),
+        "GS" => Ok(PitchClass::Gs),
+        "A" => Ok(PitchClass::A),
+        "AS" => Ok(PitchClass::As),
+        "B"  => Ok(PitchClass::B),
+        _ => Err(EntryError::TonicError),
+    }
+}
+fn check_mode(input:String)-> Result<Mode,EntryError>{
+    match(input.to_lowercase().as_str()){
+        "ionian" => Ok(Mode::Ionian),
+        "dorian" => Ok(Mode::Dorian),
+        "phrygian" => Ok(Mode::Phrygian),
+        "lydian" => Ok(Mode::Lydian),
+        "mixolydian" => Ok(Mode::Mixolydian),
+        "aeolian" => Ok(Mode::Aeolian),
+        "locrian" => Ok(Mode::Locrian),
+        _ => Err(EntryError::ModeError),
+    }
+}
+
+
+fn get_mode()-> Mode{
+    // loop until user enters a mode that doesn't throw an error
+    loop{
+        let usr=inline_user_input("Enter the Mode of the Scale: ");
+        let mode = check_mode(usr);
+        match mode{
+            Ok(_) => return mode.unwrap(),
+            Err(_) => println!("{}","Invalid mode. Try again.".red()),
+        }
+    }
+}
+
+
+fn get_tonic() -> PitchClass{
+    // loop until user enters a note that doesn't throw an error
+    loop{
+        let usr=inline_user_input("Enter the root note: ");
+        let tonic = check_tonic(usr);
+        match tonic{
+            Ok(_) => return tonic.unwrap(),
+            Err(_) => println!("{}","Invalid tonic. Try again.".red()),
+        }
+    }
+
+    
+}
+
 
 
 // use method print chords from chord_progression.rs
@@ -86,8 +154,6 @@ fn scale_as_vector(tonic: PitchClass,mode: Mode, direction: Direction ) -> Vec<N
     return scale1.notes();
 }
 
-
-
 fn print_scale(scale: &Vec<Note>) {
     for note in scale {
         println!("{}", note);
@@ -112,7 +178,6 @@ fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
     // if file doesn't exist, create it
     let destination = format!("../{}.txt",file_name);
     let mut file = std::fs::File::create(destination.clone()).unwrap();
-    
     let mut file = fs::OpenOptions::new().write(true).append(true).open(destination.clone()).unwrap();
     writeln!(file,"{}", to_write.get_num_chords()).unwrap();
     writeln!(file,"-").unwrap();
@@ -131,8 +196,12 @@ fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
 
 fn view_notes_in_scale(){
     // reading user inputs into variables
-    let tonic:String = inline_user_input("Enter the tonic of the scale: ");
-    let mode:String = inline_user_input("Enter the mode of the scale: ");
+
+
+    // let tonic:String = inline_user_input("Enter the tonic of the scale: ");
+    let tonic= get_tonic();
+
+    let mode:Mode = get_mode();
     let direction:String = inline_user_input("Enter the direction of the scale (asc/desc): ");
 
     // converting user inputs into the correct types
@@ -141,9 +210,10 @@ fn view_notes_in_scale(){
     
 
     
-    let mode_from_string: Mode = Mode::from_regex(&mode).unwrap().0;
     let scale_direction: Direction;
-    let tonic = &tonic[..]; // convert input into a &str
+    // let tonic = &tonic[..]; // convert input into a &str
+
+
     // rust is strongly typed, needing to redeclare variable here instead of just mutating it. This leads to less bugs but adds a line of redundant code. types are known at runtime
     
     if direction.to_uppercase() =="ASC"{
@@ -157,10 +227,10 @@ fn view_notes_in_scale(){
 
     // creating scale object
     let usr_scale = Scale::new(
-        ScaleType::from_mode(mode_from_string),    // scale type
-        PitchClass::from_str(tonic).unwrap(),    // tonic
+        ScaleType::from_mode(mode),    // scale type
+        tonic,    // tonic
         4,                      // octave
-        Some(mode_from_string),     // scale mode
+        Some(mode),     // scale mode
         scale_direction,   // scale direction
     ).unwrap();
     let user_notes = &usr_scale.notes();
@@ -177,10 +247,9 @@ fn view_notes_in_scale(){
 // returns a vector containing the notes in a scale 
 
 fn view_notes_in_chord(){
-    let root:String= inline_user_input("Enter Root of the chord: ");
+    let root:PitchClass= get_tonic();
     let quality:String= inline_user_input("Enter chord quality: ");
     let extension: String = inline_user_input("Enter the superscript number of the chord (3, 7, maj7, etc): ");
-    let root: &str = &root[..]; 
     let quality: &str = &quality[..]; 
     let extension: &str = &extension[..]; 
     //use match to check if the root is a valid note
@@ -188,7 +257,7 @@ fn view_notes_in_chord(){
     // store quality as a Quality converted from &str regex to Quality
     let quality_from_string:ChordQuality= ChordQuality::from_regex(quality).unwrap().0;
 
-    let chord = Chord::new(PitchClass::from_str(root).unwrap(), quality_from_string, ChordNumber::from_regex(extension).unwrap().0);
+    let chord = Chord::new(root, quality_from_string, ChordNumber::from_regex(extension).unwrap().0);
     
 
     let user_notes:&Vec<Note>= &chord.notes();
@@ -273,6 +342,6 @@ fn main() {
     // let test_chord= chord_as_vector(PitchClass::C, ChordQuality::Minor, ChordNumber::Triad );
     // print_scale(test_chord);
     // test_progressions();
+    // test_error_checking();
     display_options();
-    
 }
