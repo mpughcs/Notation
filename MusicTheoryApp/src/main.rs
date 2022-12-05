@@ -48,6 +48,8 @@ fn check_tonic(input: String) -> Result<PitchClass, EntryError>{
         _ => Err(EntryError::TonicError),
     }
 }
+
+// TODO, make check mode implement the built in Mode::from_regex() method instead of explicitly listing all the modes
 fn check_mode(input:String)-> Result<Mode,EntryError>{
     match(input.to_lowercase().as_str()){
         "ionian" => Ok(Mode::Ionian),
