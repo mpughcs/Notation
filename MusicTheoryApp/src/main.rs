@@ -67,6 +67,8 @@ enum EntryError {
     TonicError,
     ModeError,
     DirectionError,
+    QualityError,
+    ChordNumberError
    
 }
 
@@ -93,6 +95,43 @@ fn match_mode(input:String)-> Result<Mode,EntryError>{
         _ => Err(EntryError::ModeError),
     }
 }
+fn match_chord_number(input: String)-> Result<ChordNumber,EntryError>{
+    
+    match ChordNumber::from_regex(input.as_str()){
+        Ok(_)=> Ok(ChordNumber::from_regex(input.as_str()).unwrap().0),
+        // also match the numbers 3,5,9,11,13
+
+        _ => Err(EntryError::ChordNumberError),
+    }
+}
+
+fn match_quality(input:String)-> Result<ChordQuality,EntryError>{
+    match ChordQuality::from_regex(input.as_str()){
+        Ok(_) => Ok(ChordQuality::from_regex(input.as_str()).unwrap().0),
+        _ => Err(EntryError::QualityError)
+    }
+}
+fn get_chord_number()->ChordNumber{
+    loop {
+        let usr=inline_user_input("Enter Extension of the chord: ");
+        let num=match_chord_number(usr);
+        match num{
+            Ok(_) => return num.unwrap(),
+            Err(_) => println!("{}","Invalid extension. Try again.".red()),
+        }
+    }
+}
+fn get_quality()->ChordQuality{
+    loop{
+        let usr=inline_user_input("Enter Chord Quality: ");
+        let qual= match_quality(usr);
+        match qual{
+            Ok(_) =>  return qual.unwrap(),
+            Err(_) => println!("{}","Invalid quality. Try again.".red()),
+        }
+    }
+}
+
 
 
 // get_mode calls get_mode to check if the user input is a valid mode, reprompts if not
@@ -220,16 +259,15 @@ fn view_notes_in_scale(){
 
 fn view_notes_in_chord(){
     let root:PitchClass= get_tonic();
-    let quality:String= inline_user_input("Enter chord quality: ");
-    let extension: String = inline_user_input("Enter the superscript number of the chord (3, 7, maj7, etc): ");
-    let quality: &str = &quality[..]; 
-    let extension: &str = &extension[..]; 
+    let qual = get_quality();
+    let extension = get_chord_number();
+    // let quality: &str = &quality[..]; 
     //use match to check if the root is a valid note
   
     // store quality as a Quality converted from &str regex to Quality
-    let quality_from_string:ChordQuality= ChordQuality::from_regex(quality).unwrap().0;
+   
 
-    let chord = Chord::new(root, quality_from_string, ChordNumber::from_regex(extension).unwrap().0);
+    let chord = Chord::new(root, qual, extension);
     
 
     let user_notes:&Vec<Note>= &chord.notes();
@@ -257,7 +295,6 @@ fn display_options(){
         format!("Welcome to Notation!").bold().green().italic(),
         format!("This program will allow you to interact with the Rust Music Theory library.").green(),
         format!("You can create notes, scales, chords!").green(),
-   
     );
    
     loop{
@@ -284,23 +321,28 @@ fn display_options(){
 
 
 fn create_progression(){
-    let prog_name= inline_user_input("Enter the name of your chord progression: ").to_owned();
+    let mut prog_name= inline_user_input("Enter the name of your chord progression: ").to_owned();
+    if prog_name.len()==0 {
+        println!("Invalid name. Defaulting to 'progression'");
+        prog_name="progression".to_string();
+    }
+    
     let num_chords=inline_user_input("How many chords will be in your progression?: ").parse::<i32>().unwrap();
     let mut i: i32=0;
     let mut user_chords:ChordProgression= ChordProgression::new(prog_name.clone());
     // convert prog_name to &str
     
     while i < num_chords{
-        println!("Chord {} ",format!("{}", (&i+1).to_string()));
-        let root:String= inline_user_input("Enter Root of the chord: ");
-        let quality:String= inline_user_input("Enter chord quality: ");
-        let extension: String = inline_user_input("Enter the superscript number of the chord (3, 7, maj7, etc): ");
-        let root: &str = &root[..]; 
-        let quality: &str = &quality[..]; 
-        let extension: &str = &extension[..]; 
+        println!("Chord {} ",format!("{}", (&i+1).to_string().green()));
+        let root:PitchClass= get_tonic();
+        let quality= get_quality();
+                let extension: ChordNumber = get_chord_number();
+
+        
+    
         // store quality as a Quality converted from &str regex to Quality
-        let quality_from_string:ChordQuality= ChordQuality::from_regex(quality).unwrap().0;
-        let chord = Chord::new(PitchClass::from_str(root).unwrap(), quality_from_string, ChordNumber::from_regex(extension).unwrap().0);
+        
+        let chord = Chord::new(root, quality, extension);
         user_chords.add_chord(chord);
         i+=1;
     }

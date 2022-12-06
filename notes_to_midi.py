@@ -26,8 +26,9 @@ class Chord:
   def __repr__(self):
     return str(self.note_list)
 
-def write_to_disk():
-  with open("output.mid", 'wb') as outf:
+def write_to_disk(output_file):
+  fileOut=output_file+".mid"
+  with open(fileOut, 'wb') as outf:
     mf.writeFile(outf)
 
 set_of_notes = ('C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
@@ -98,9 +99,12 @@ def scale_to_midi(list_of_notes):
     time = i             # start on beat equal to it's index in the list of notes passed
     duration = 1         # 1 beat long
     mf.addNote(track, channel, pitch, time, duration, volume)
-  write_to_disk()
+    # print(note)
+  # print("reached here")
+  
+  write_to_disk("output")
 
-def progression_to_midi(chords):
+def progression_to_midi(chords,output_file):
   channel = 0
   volume = 100
   # print(chords)
@@ -112,54 +116,55 @@ def progression_to_midi(chords):
       duration = 2         # 2 beat long
       mf.addNote(track, channel, pitch, time, duration, volume)
   # print("reached here")
-  write_to_disk()
+  write_to_disk(output_file)
 
-def single_chord_to_midi(list_of_notes):
-  channel = 0
-  volume = 100
-  for i,note in enumerate(list_of_notes):
-    # print(list_of_notes[i].name)
-    pitch = midi_from_note(list_of_notes[i].name,list_of_notes[i].octave)          # C4 (middle C)
-    time = 0            # start on beat equal to it's index in the list of notes passed
-    duration = 4         # 1 beat long
-    mf.addNote(track, channel, pitch, time, duration, volume)
-  write_to_disk()
 
 
 def process_scale():
   notes=get_notes_from_file("notes.txt")
+  print("Notes read")
   scale_to_midi(notes)
 
 def test_progression(file):
-  chordList=get_chords_from_file(file)
+  fileTxt=file+".txt"
+  chordList=get_chords_from_file(fileTxt)
   print("File read")
-  progression_to_midi(chordList)
+  progression_to_midi(chordList,file)
   print("Midi file written")
 
 def scaleOrChord():
   while(True):
-  
-    usr=input("Would you like to process a scale or progression? (s/p): ")
+    print("Choose an option: ")
+    print("\ts: Process a scale")
+    print("\tp: Process a progression")
+    print("\tq: Quit")
+    usr=input("(s/p/q): ").lower()
+
     if usr=="s":
       try:
         print("Processing scale")
-
         process_scale()
         print("Scale processed")
+        print("File saved as output.mid")
       except:
         print("Input Error, is notes.txt formatted correctly?")
       break
     elif usr=="p":
       try:
-        fileName=input("Enter the name of progression with extension (ex. prog.txt): ")
+        fileName=input("Enter the name of progression: ")
         print("\nProcessing progression")
         test_progression(fileName)
         print("Progression processed")
-        print("File saved as output.mid")
+        print("File saved as "+fileName+".mid")
       except:
-        print("Processing Error, is ",fileName,"formatted correctly?")
+        print("Processing Error, is ",fileName,".txt formatted correctly?")
+        break
+    elif usr=="q":
+      print("Quitting")
       break
+
     else:
       print("Invalid input, please try again")
+      pause=input("Press enter to continue")
 
 scaleOrChord()
