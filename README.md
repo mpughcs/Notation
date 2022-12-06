@@ -5,6 +5,7 @@ Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasi
 * Notation now supports chord progressions! which are a series of chords that are played in succession.
 * When a user creates a chord progression, it is written to a file called "\<progression_name>.txt" in the parent directory.
 * The user can then convert the chord progression and notes to playable audio by running the command
+* Robust Error Checking
     * ```$ python3 notes_to_midi.py``` and following the instructions in the terminal.
 
 
