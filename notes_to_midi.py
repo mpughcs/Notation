@@ -136,7 +136,6 @@ def test_progression(file):
   progression_to_midi(chordList)
   print("Midi file written")
 
-
 def scaleOrChord():
   while(True):
   

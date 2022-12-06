@@ -2,6 +2,7 @@ pub mod chord_progression{
     use rustmt::chord::{Chord};
 
     pub struct ChordProgression{
+        #[allow(dead_code)]
         prog_name: String,
         pub chord_progression: Vec<Chord>,
         num_chords: i32,
@@ -22,7 +23,6 @@ pub mod chord_progression{
             self.num_chords+=1;
         }
         pub fn print_prog(&self){
-            let count:i32=0;
             for chord in &self.chord_progression{
                 println!("root: {}, quality:{}, extension: {}",
                 format!("{}", chord.root.to_string()),

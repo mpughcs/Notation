@@ -1,99 +1,13 @@
 extern crate rust_music_theory as rustmt;
 use rustmt::note::{Note, Notes, PitchClass};
 use rustmt::scale::{Scale, ScaleType, Mode, Direction};
-use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality, self};
+use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
 use text_io::scan;
-use core::num;
-use std::f32::consts::PI;
-use std::{io, fs, clone, string};
+use std::{io, fs};
 use colored::Colorize;
-use std::io::{stdin, stdout, Read, Write, ErrorKind};
+use std::io::{stdin, stdout, Read, Write};
 mod chord_progression;
 use crate::chord_progression::chord_progression::*;
-
-
-
-fn pause() {
-    let mut stdout = stdout();
-    stdout.write(b"Press Enter to continue...").unwrap();
-    stdout.flush().unwrap();
-    stdin().read(&mut [0]).unwrap();
-}
-
-
-// derive debug for all enums
-#[derive(Debug)]
-enum EntryError {
-    TonicError,
-    ModeError,
-    DirectionError,
-   
-}
-
-// TODO: implement corrisoponding sharp and flat enums as "ors" in the match statement
-fn check_tonic(input: String) -> Result<PitchClass, EntryError>{
-    match(input.to_uppercase().as_str()){
-        "C" => Ok(PitchClass::C),
-        "CS"  => Ok(PitchClass::Cs),
-        "D" => Ok(PitchClass::D),
-        "DS" => Ok(PitchClass::Ds),
-        "E" => Ok(PitchClass::E),
-        "F" => Ok(PitchClass::F),
-        "FS"=> Ok(PitchClass::Fs),
-        "G"  => Ok(PitchClass::G),
-        "GS" => Ok(PitchClass::Gs),
-        "A" => Ok(PitchClass::A),
-        "AS" => Ok(PitchClass::As),
-        "B"  => Ok(PitchClass::B),
-        _ => Err(EntryError::TonicError),
-    }
-}
-
-// TODO, make check mode implement the built in Mode::from_regex() method instead of explicitly listing all the modes
-fn check_mode(input:String)-> Result<Mode,EntryError>{
-    match(input.to_lowercase().as_str()){
-        "ionian" => Ok(Mode::Ionian),
-        "dorian" => Ok(Mode::Dorian),
-        "phrygian" => Ok(Mode::Phrygian),
-        "lydian" => Ok(Mode::Lydian),
-        "mixolydian" => Ok(Mode::Mixolydian),
-        "aeolian" => Ok(Mode::Aeolian),
-        "locrian" => Ok(Mode::Locrian),
-        _ => Err(EntryError::ModeError),
-    }
-}
-
-
-fn get_mode()-> Mode{
-    // loop until user enters a mode that doesn't throw an error
-    loop{
-        let usr=inline_user_input("Enter the Mode of the Scale: ");
-        let mode = check_mode(usr);
-        match mode{
-            Ok(_) => return mode.unwrap(),
-            Err(_) => println!("{}","Invalid mode. Try again.".red()),
-        }
-    }
-}
-
-
-fn get_tonic() -> PitchClass{
-    // loop until user enters a note that doesn't throw an error
-    loop{
-        let usr=inline_user_input("Enter the root note: ");
-        let tonic = check_tonic(usr);
-        match tonic{
-            Ok(_) => return tonic.unwrap(),
-            Err(_) => println!("{}","Invalid tonic. Try again.".red()),
-        }
-    }
-
-    
-}
-
-
-
-// use method print chords from chord_progression.rs
 
 
 fn help(){
@@ -139,6 +53,22 @@ println!("
     ");
 }
 
+fn pause() {
+    let mut stdout = stdout();
+    stdout.write(b"Press Enter to continue...").unwrap();
+    stdout.flush().unwrap();
+    stdin().read(&mut [0]).unwrap();
+}
+
+
+// derive debug for all enums
+#[derive(Debug)]
+enum EntryError {
+    TonicError,
+    ModeError,
+    DirectionError,
+   
+}
 
 // This is a helper function that makes inline input easier.
 fn inline_user_input(prompt: &str) -> String {
@@ -148,48 +78,95 @@ fn inline_user_input(prompt: &str) -> String {
     scan!("{}\n", to_return);
     return to_return;
 }
+// match_tonic calls the PitchClass::from_regex() method to check if the user input is a valid pitch class
+fn match_tonic(input: String) -> Result<PitchClass, EntryError>{
+    match PitchClass::from_regex(input.as_str()){
+        Ok(_) => Ok(PitchClass::from_regex(input.as_str()).unwrap().0),
+        _ => Err(EntryError::TonicError),
+    }
+}
+
+// match_mode calls the Mode::from_regex() method to check if the user input is a valid mode
+fn match_mode(input:String)-> Result<Mode,EntryError>{
+    match Mode::from_regex(input.as_str()){
+        Ok(_) => Ok(Mode::from_regex(input.as_str()).unwrap().0),
+        _ => Err(EntryError::ModeError),
+    }
+}
 
 
+// get_mode calls get_mode to check if the user input is a valid mode, reprompts if not
+fn get_mode()-> Mode{
+    loop{
+        let usr=inline_user_input("Enter the Mode of the Scale: ");
+        let mode = match_mode(usr);
+        match mode{
+            Ok(_) => return mode.unwrap(),
+            Err(_) => println!("{}","Invalid mode. Try again.".red()),
+        }
+    }
+}
 
+
+// get_mode calls get_tonic to check if the user input is a valid mode, reprompts if not
+fn get_tonic() -> PitchClass{
+    loop{
+        let usr=inline_user_input("Enter the root note: ");
+        let tonic = match_tonic(usr);
+        match tonic{
+            Ok(_) => return tonic.unwrap(),
+            Err(_) => println!("{}","Invalid tonic. Try again.".red()),
+        }
+    }
+}
+
+
+// allow unused because this is a helper function
+#[allow(unused)]
+// scale_as_vector returns a vector of notes from a scale
 fn scale_as_vector(tonic: PitchClass,mode: Mode, direction: Direction ) -> Vec<Note> {
     let scale1 = Scale::new(ScaleType::from_mode(mode), tonic, 4,Some(mode),direction).unwrap();
     return scale1.notes();
 }
 
+// print_scale prints a vector of notes
 fn print_scale(scale: &Vec<Note>) {
     for note in scale {
         println!("{}", note);
     }
 }
+
+// write_notes_to_file: so that we can write user output 
 fn write_notes_to_file(scale: &Vec<Note>) {
     let mut file = std::fs::File::create("../notes.txt").unwrap();
     for note in scale {
         writeln!(file, "{},{}", note,note.octave).unwrap();
     }
 }
+// append_notes_to_file: so that we can chords to the file iteratively
 fn append_notes_to_file(notes: &Vec<Note>, file_name: &str) {
-    // handle error if file doesn't exist
     let mut file = fs::OpenOptions::new().write(true).append(true).open(file_name).unwrap();
     for note in notes {
         writeln!(file, "{},{}", note,note.octave).unwrap();
     }
 }
 
+// takes in the chord progression struct and writes it to a file with the given name
 fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
     let mut i=0;
     // if file doesn't exist, create it
     let destination = format!("../{}.txt",file_name);
-    let mut file = std::fs::File::create(destination.clone()).unwrap();
+    let file = std::fs::File::create(destination.clone()).unwrap();
     let mut file = fs::OpenOptions::new().write(true).append(true).open(destination.clone()).unwrap();
     writeln!(file,"{}", to_write.get_num_chords()).unwrap();
     writeln!(file,"-").unwrap();
     while i < to_write.get_num_chords(){
         let iterator = i as usize;
         let notes_to_add = chord_as_vector(to_write.chord_progression[iterator].root, to_write.chord_progression[iterator].quality,to_write.chord_progression[iterator].number);
-        let mut note_count=notes_to_add.len();
+        let note_count=notes_to_add.len();
         writeln!(file,"{}", note_count).unwrap();
         append_notes_to_file(&notes_to_add,&destination);
-        if(i!= to_write.get_num_chords()-1){
+        if i!= to_write.get_num_chords()-1{
             writeln!(file,"-").unwrap();
         }
         i+=1;
@@ -197,20 +174,13 @@ fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
 }
 
 fn view_notes_in_scale(){
-    // reading user inputs into variables
 
-
-    // let tonic:String = inline_user_input("Enter the tonic of the scale: ");
     let tonic= get_tonic();
 
     let mode:Mode = get_mode();
     let direction:String = inline_user_input("Enter the direction of the scale (asc/desc): ");
 
-    // converting user inputs into the correct types
     
-    // check for none values
-    
-
     
     let scale_direction: Direction;
     // let tonic = &tonic[..]; // convert input into a &str
@@ -305,7 +275,7 @@ fn display_options(){
             "3" => create_progression(),
             "4" => help(),
             "5" => break,
-            _ => println!("invalid input"),
+            _ => println!("{}", "Invalid Input, Try again".red())
         }
     }
     
@@ -340,10 +310,6 @@ fn create_progression(){
 }
 
 fn main() {
-    // let scale2= scale_as_vector(PitchClass::A, Mode::Locrian, Direction::Ascending);
-    // let test_chord= chord_as_vector(PitchClass::C, ChordQuality::Minor, ChordNumber::Triad );
-    // print_scale(test_chord);
-    // test_progressions();
-    // test_error_checking();
+   
     display_options();
 }
