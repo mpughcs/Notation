@@ -58,6 +58,7 @@ Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasi
 - [x] Help
 - [x] Exit 
 - [x] View notes in a chord
-- [ ] Create chord progression
-- [ ] Make notes and scales audible
-- [ ] Make chords audible
+- [x] Create chord progression
+- [x] Make notes and scales audible
+- [x] Make chords audible
+
