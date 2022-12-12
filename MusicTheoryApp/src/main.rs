@@ -8,6 +8,8 @@ use colored::Colorize;
 use std::io::{stdin, stdout, Read, Write};
 mod chord_progression;
 use crate::chord_progression::chord_progression::*;
+use std::process::Command;
+
 
 
 fn help(){
@@ -66,7 +68,6 @@ fn pause() {
 enum EntryError {
     TonicError,
     ModeError,
-    DirectionError,
     QualityError,
     ChordNumberError
    
@@ -184,6 +185,7 @@ fn write_notes_to_file(scale: &Vec<Note>) {
 }
 // append_notes_to_file: so that we can chords to the file iteratively
 fn append_notes_to_file(notes: &Vec<Note>, file_name: &str) {
+   
     let mut file = fs::OpenOptions::new().write(true).append(true).open(file_name).unwrap();
     for note in notes {
         writeln!(file, "{},{}", note,note.octave).unwrap();
@@ -194,6 +196,7 @@ fn append_notes_to_file(notes: &Vec<Note>, file_name: &str) {
 fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
     let mut i=0;
     // if file doesn't exist, create it
+    // let destination = format!("../progs/{}.txt",file_name);
     let destination = format!("../{}.txt",file_name);
     let file = std::fs::File::create(destination.clone()).unwrap();
     let mut file = fs::OpenOptions::new().write(true).append(true).open(destination.clone()).unwrap();
@@ -348,7 +351,7 @@ fn create_progression(){
     }
     // pass chord progression and progto function that writes to file
     write_prog_to_file(&user_chords, &prog_name);
-
+  
 }
 
 fn main() {

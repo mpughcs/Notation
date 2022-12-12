@@ -1,4 +1,5 @@
 # create your MIDI object
+import sys
 from midiutil.MidiFile import MIDIFile
 mf = MIDIFile(1)     # only 1 track
 track = 0   # the only track
@@ -125,7 +126,7 @@ def process_scale():
   print("Notes read")
   scale_to_midi(notes)
 
-def test_progression(file):
+def process_progression(file):
   fileTxt=file+".txt"
   chordList=get_chords_from_file(fileTxt)
   print("File read")
@@ -153,7 +154,7 @@ def scaleOrChord():
       try:
         fileName=input("Enter the name of progression: ")
         print("\nProcessing progression")
-        test_progression(fileName)
+        process_progression(fileName)
         print("Progression processed")
         print("File saved as "+fileName+".mid")
       except:
