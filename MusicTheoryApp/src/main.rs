@@ -11,7 +11,6 @@ use crate::chord_progression::chord_progression::*;
 use std::process::Command;
 
 
-
 fn help(){
 
     // scroll up
@@ -196,8 +195,8 @@ fn append_notes_to_file(notes: &Vec<Note>, file_name: &str) {
 fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
     let mut i=0;
     // if file doesn't exist, create it
-    // let destination = format!("../progs/{}.txt",file_name);
-    let destination = format!("../{}.txt",file_name);
+    let destination = format!("../progressions/{}.txt",file_name);
+    // let destination = format!("../{}.txt",file_name);
     let file = std::fs::File::create(destination.clone()).unwrap();
     let mut file = fs::OpenOptions::new().write(true).append(true).open(destination.clone()).unwrap();
     writeln!(file,"{}", to_write.get_num_chords()).unwrap();

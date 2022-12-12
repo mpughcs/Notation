@@ -117,6 +117,7 @@ def progression_to_midi(chords,output_file):
       duration = 2         # 2 beat long
       mf.addNote(track, channel, pitch, time, duration, volume)
   # print("reached here")
+  output_file="MidiProg/"+output_file
   write_to_disk(output_file)
 
 
@@ -127,7 +128,8 @@ def process_scale():
   scale_to_midi(notes)
 
 def process_progression(file):
-  fileTxt=file+".txt"
+  fileTxt="progressions/"+file+".txt"
+  print(fileTxt)
   chordList=get_chords_from_file(fileTxt)
   print("File read")
   progression_to_midi(chordList,file)
