@@ -177,7 +177,7 @@ fn print_scale(scale: &Vec<Note>) {
 
 // write_notes_to_file: so that we can write user output 
 fn write_notes_to_file(scale: &Vec<Note>) {
-    let mut file = std::fs::File::create("../notes.txt").unwrap();
+    let mut file = std::fs::File::create("../scale.txt").unwrap();
     for note in scale {
         writeln!(file, "{},{}", note,note.octave).unwrap();
     }

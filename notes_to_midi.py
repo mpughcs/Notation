@@ -123,7 +123,7 @@ def progression_to_midi(chords,output_file):
 
 
 def process_scale():
-  notes=get_notes_from_file("notes.txt")
+  notes=get_notes_from_file("scale.txt")
   print("Notes read")
   scale_to_midi(notes)
 
@@ -150,7 +150,7 @@ def scaleOrChord():
         print("Scale processed")
         print("File saved as output.mid")
       except:
-        print("Input Error, is notes.txt formatted correctly?")
+        print("Input Error, is scale.txt formatted correctly?")
       break
     elif usr=="p":
       try:
