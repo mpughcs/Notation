@@ -1,5 +1,6 @@
 # Notation
 Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasikci/rust-music-theory) to offer users a way to interface with music theory programmatically. The application is currently in early development by [Max Pugh](https://github.com/mpughcs)
+
 # Version 0.0.3 Features
 <!-- create indent -->
 * Notation now supports chord progressions! which are a series of chords that are played in succession.
@@ -23,20 +24,20 @@ Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasi
 
     * ```$ cargo run```
 ## Converting notes to playable audio
-* after exiting the command line app, run cd ../ to enter the parent directory. 
+* after exiting the command line app, run cd ../ to enter the parent director 
 * Install the python package with the command
     * ```$ pip install MIDIUtil```
 * Here you can view your notes in the file "notes.txt" which contains info about a note's pitch and octave.
 * run the commands
-    * ``` $ python3 notes_to_midi.py ```      
-    this script will convert the notes in notes.txt to playable notes in via MIDI in the file "output.mid"
-* Output.mid can be played in any MIDI player.
+    * ``` $ python3 notes_to_midi.py ``` 
+* this script will convert the notes in scale.txt to midi notes saved to scale.mid and the notes from progrssions/your_progression_name.txt to MidiProg/your_progression_name.mid
+* .mid files can be played in any MIDI player.
 ---
 ### Note about outputting .mid files on Mac OS
 * .mid files are not playable by default on Mac OS. To play .mid files on Mac OS, you must install a MIDI player. 
 * There is a command line MIDI player called [timidity](https://www.mankier.com/1/timidity) that can be installed with the command
     * ```$ brew install timidity```
-    * Once installed, you can play the .mid file with the command
+    * Once installed,navigate to enclosing folder of .mid file you want to play and run the command
         * ```$ timidity output.mid```
     * This will produce a playable audio file in the terminal. which can be opened with the command
         * ```$ open output.ogg```

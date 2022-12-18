@@ -131,6 +131,11 @@ def get_path():
     bundle_dir = os.path.dirname(os.path.abspath(__file__))
   return bundle_dir
 
+def print_available_progressions():
+  print("Available progressions: ")
+  for file in os.listdir("progressions"):
+    if file.endswith(".txt"):
+      print("\t"+file[:-4])
 
 
 
@@ -164,16 +169,18 @@ def scaleOrChord():
         print("File saved as scale.mid")
       except:
         print("Input Error, is scale.txt formatted correctly?")
-      break
     elif usr=="p":
       try:
-        fileName=input("Enter the name of progression: ")
+        print_available_progressions()
+        fileName=input("Enter the name of progression to convert to MIDI: ")
         print("\nProcessing progression")
         process_progression(fileName)
         print("Progression processed")
-        print("File saved as "+fileName+".mid")
+        print("File saved as "+fileName+".mid to folder MidiProg")
+        pause=input("Press enter to continue")
+
       except:
-        print("Processing Error, is ",fileName,".txt formatted correctly?")
+        print("Processing Error, does ",fileName,".txt exist in the progressions/ directory?")
         break
     elif usr=="q":
       print("Quitting")
@@ -181,7 +188,6 @@ def scaleOrChord():
 
     else:
       print("Invalid input, please try again")
-      # pause=input("Press enter to continue")
       
 scaleOrChord()
 # shutil.which('python')
