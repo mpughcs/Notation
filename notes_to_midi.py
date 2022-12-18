@@ -1,5 +1,6 @@
 # create your MIDI object
 import sys
+import os
 from midiutil.MidiFile import MIDIFile
 mf = MIDIFile(1)     # only 1 track
 track = 0   # the only track
@@ -103,7 +104,7 @@ def scale_to_midi(list_of_notes):
     # print(note)
   # print("reached here")
   
-  write_to_disk("output")
+  write_to_disk("scale")
 
 def progression_to_midi(chords,output_file):
   channel = 0
@@ -119,6 +120,18 @@ def progression_to_midi(chords,output_file):
   # print("reached here")
   output_file="MidiProg/"+output_file
   write_to_disk(output_file)
+
+# defining path to .txt file for once the program is an executable using pyinstaller
+def get_path():
+  if getattr(sys, 'frozen', False):
+    # we are running in a bundle
+    bundle_dir = sys._MEIPASS
+  else:
+    # we are running in a normal Python environment
+    bundle_dir = os.path.dirname(os.path.abspath(__file__))
+  return bundle_dir
+
+
 
 
 
@@ -148,7 +161,7 @@ def scaleOrChord():
         print("Processing scale")
         process_scale()
         print("Scale processed")
-        print("File saved as output.mid")
+        print("File saved as scale.mid")
       except:
         print("Input Error, is scale.txt formatted correctly?")
       break
@@ -168,6 +181,12 @@ def scaleOrChord():
 
     else:
       print("Invalid input, please try again")
-      pause=input("Press enter to continue")
-
+      # pause=input("Press enter to continue")
+      
 scaleOrChord()
+# shutil.which('python')
+# print(get_path())
+# self=sys.stdin.read().strip()
+# __main__=sys.stdin.read().strip()
+
+# print(file) 

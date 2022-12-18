@@ -3,7 +3,7 @@ Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasi
 # Version 0.0.3 Features
 <!-- create indent -->
 * Notation now supports chord progressions! which are a series of chords that are played in succession.
-* When a user creates a chord progression, it is written to a file called "\<progression_name>.txt" in the parent directory.
+* When a user creates a chord progression, it is written to a file called "../progressions/progression_name.txt" in the parent directory.
 * The user can then convert the chord progression and notes to playable audio by running the command
     * ```$ python3 notes_to_midi.py``` and following the instructions in the terminal.
 
@@ -54,11 +54,19 @@ Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasi
 - If you are unfamiliar with music theory concepts or unsure if the code is producing the correct output, I found this helpful [reference](https://www.thejazzpianosite.com/jazz-piano-lessons/the-basics/modes/) that covers some of the basic concepts implemented in this project. 
 # Feature Roadmap
 <!-- # make checklist  -->
+### 0.0.1
+- [x] Help option
+- [x] Exit option
 - [x] View notes in any scale
-- [x] Help
-- [x] Exit 
+
+### 0.0.2
 - [x] View notes in a chord
 - [x] Create chord progression
-- [x] Make notes and scales audible
-- [x] Make chords audible
+- [x] View notes in a chord progression
+- [x] Scales and single chords written to file ../scale.txt
+- [x] Chord progressions written to file ../progressions/progression_name.txt
+
+### 0.0.3
+- [x] Convert notes to playable audio using custom python interpreter
+- [x] Midi files generated from notes_to_midi.py are saved in MidiProg/ directory
 
