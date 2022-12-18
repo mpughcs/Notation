@@ -51,7 +51,27 @@ println!("
 
     'Locrian' | 'locrian' => Locrian,
         -contains the notes: 1 b2 b3 4 b5 b6 b7
-    ");
+    
+    Chord extensions/numbers:
+        Triad,
+        Seventh,
+        MajorSeventh,
+        Ninth,
+        Eleventh,
+        Thirteenth,
+    
+    Chord qualities:
+        Major,
+        Minor,
+        Diminished,
+        Augmented,
+        HalfDiminished,
+        Dominant,
+        Suspended2,
+        Suspended4,
+    "
+    
+);
 }
 
 fn pause() {
@@ -113,7 +133,7 @@ fn match_quality(input:String)-> Result<ChordQuality,EntryError>{
 }
 fn get_chord_number()->ChordNumber{
     loop {
-        let usr=inline_user_input("Enter Extension of the chord: ");
+        let usr=inline_user_input("Enter Extension of the chord (triad, seventh, eleventh): ");
         let num=match_chord_number(usr);
         match num{
             Ok(_) => return num.unwrap(),
@@ -123,7 +143,7 @@ fn get_chord_number()->ChordNumber{
 }
 fn get_quality()->ChordQuality{
     loop{
-        let usr=inline_user_input("Enter Chord Quality: ");
+        let usr=inline_user_input("Enter Chord Quality (major, minor, diminished): ");
         let qual= match_quality(usr);
         match qual{
             Ok(_) =>  return qual.unwrap(),
@@ -197,8 +217,10 @@ fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
     // if file doesn't exist, create it
     let destination = format!("../progressions/{}.txt",file_name);
     // let destination = format!("../{}.txt",file_name);
+
     let file = std::fs::File::create(destination.clone()).unwrap();
     let mut file = fs::OpenOptions::new().write(true).append(true).open(destination.clone()).unwrap();
+    
     writeln!(file,"{}", to_write.get_num_chords()).unwrap();
     writeln!(file,"-").unwrap();
     while i < to_write.get_num_chords(){
@@ -212,6 +234,8 @@ fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
         }
         i+=1;
     }
+    println!("Progression written to {}",destination.green());
+    pause();
 }
 
 fn view_notes_in_scale(){
@@ -224,7 +248,6 @@ fn view_notes_in_scale(){
     
     
     let scale_direction: Direction;
-    // let tonic = &tonic[..]; // convert input into a &str
 
 
     // rust is strongly typed, needing to redeclare variable here instead of just mutating it. This leads to less bugs but adds a line of redundant code. types are known at runtime
@@ -251,6 +274,7 @@ fn view_notes_in_scale(){
     // print all notes in user_notes followed by a newline
     print_scale(user_notes);
     write_notes_to_file(user_notes);
+    println!("Scale written to {}","../scale.txt".green());
     pause();
 }
 
