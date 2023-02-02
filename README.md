@@ -1,5 +1,5 @@
 # Notation
-Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasikci/rust-music-theory) to offer users a way to interface with music theory programmatically. The application is currently in early development by [Max Pugh](https://github.com/mpughcs)
+Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasikci/rust-music-theory) to offer users a way to interface with music theory and output midi audio files programmatically. The application is currently in early development by [Max Pugh](https://github.com/mpughcs)
 
 # Version 0.0.3 Features
 <!-- create indent -->
