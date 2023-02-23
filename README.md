@@ -1,5 +1,14 @@
 # Notation
 Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasikci/rust-music-theory) to offer users a way to interface with music theory and output midi audio files programmatically. The application is currently in early development by [Max Pugh](https://github.com/mpughcs)
+<!-- add table of contents -->
+# Table of Contents
+- [Notation](#notation)
+- [Features](#features)
+  - [Version 0.0.3 Features](#version-003-features)
+- [How to run](#how-to-run)
+    - [Installing Rust and Cargo](#installing-rust-and-cargo)
+    - [Running the Program](#running-the-program)
+    - [Converting notes to playable audio](#converting-notes-to-playable-audio)
 
 # Version 0.0.3 Features
 <!-- create indent -->
