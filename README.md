@@ -9,6 +9,11 @@ Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasi
     - [Installing Rust and Cargo](#installing-rust-and-cargo)
     - [Running the Program](#running-the-program)
     - [Converting notes to playable audio](#converting-notes-to-playable-audio)
+- [Music Theory Concepts Implemented](#music-theory-concepts-implemented)
+- [Feature Roadmap](#feature-roadmap)
+    - [0.0.1](#001)
+    - [0.0.2](#002)
+    - [0.0.3](#003)
 
 # Version 0.0.3 Features
 <!-- create indent -->
