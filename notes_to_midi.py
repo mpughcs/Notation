@@ -9,6 +9,7 @@ time = 0    # start at the beginning
 mf.addTrackName(track, time, "Sample Track")
 mf.addTempo(track, time, 120)
 
+# create a class for a musical note
 class Note: 
   def __init__(self, name, octave):
     self.name = name
@@ -17,6 +18,7 @@ class Note:
   def __repr__(self):
     return f"{self.name},{self.octave}"
 
+# create a class for a chord
 class Chord:
   note_list:Note =[]
   length=len(note_list)
@@ -28,18 +30,20 @@ class Chord:
   def __repr__(self):
     return str(self.note_list)
 
+# write the MIDI file to disk
 def write_to_disk(output_file):
   fileOut=output_file+".mid"
   with open(fileOut, 'wb') as outf:
     mf.writeFile(outf)
 
 set_of_notes = ('C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B')
+# function to extract the MIDI number from a note name
 def midi_from_note(note_name, octave):
     note_index = set_of_notes.index( note_name.upper())
     midi_number = 12 * (int(octave) + 1) + note_index
     return midi_number
 
-# def sting_to_midi_number(note_name):
+# function to convert a list of notes to MIDI
 def get_notes_from_file(fileName):
     list_of_notes = []
     try: 
@@ -51,7 +55,7 @@ def get_notes_from_file(fileName):
         print("File not accessible")
     return list_of_notes
 
-
+# algorithm to decrpyt the notes from the file produced by the rust program
 def get_chords_from_file(filename):
   chords=[]
   with open(filename) as file_in:
@@ -106,6 +110,9 @@ def scale_to_midi(list_of_notes):
   
   write_to_disk("scale")
 
+
+
+# parse the chords from the file and convert them to MIDI
 def progression_to_midi(chords,output_file):
   channel = 0
   volume = 100
@@ -114,8 +121,8 @@ def progression_to_midi(chords,output_file):
     for j,note in enumerate(chord.note_list):
       note=Note(note.split(",")[0],note.split(",")[1])
       pitch = midi_from_note(note.name,note.octave)          # C4 (middle C)
-      time = i*2          # start on beat equal to it's index in the list of notes passed
-      duration = 2         # 2 beat long
+      time = i*8          # start on beat equal to it's index in the list of notes passed
+      duration = 8        # 2 beat long
       mf.addNote(track, channel, pitch, time, duration, volume)
   # print("reached here")
   output_file="MidiProg/"+output_file

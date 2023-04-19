@@ -8,13 +8,9 @@ use colored::Colorize;
 use std::io::{stdin, stdout, Read, Write};
 mod chord_progression;
 use crate::chord_progression::chord_progression::*;
-use std::process::Command;
 
-
+// function to display helpful information to the user
 fn help(){
-
-    // scroll up
-   
 println!("
     Notes as strings:
     'C' | 'c' => C,
@@ -74,6 +70,7 @@ println!("
 );
 }
 
+// simple enter to continue function
 fn pause() {
     let mut stdout = stdout();
     stdout.write(b"Press Enter to continue...").unwrap();
@@ -115,11 +112,11 @@ fn match_mode(input:String)-> Result<Mode,EntryError>{
         _ => Err(EntryError::ModeError),
     }
 }
+// match_chord_number calls the ChordNumber::from_regex() method to check if the user input is a valid chord number
 fn match_chord_number(input: String)-> Result<ChordNumber,EntryError>{
     
     match ChordNumber::from_regex(input.as_str()){
         Ok(_)=> Ok(ChordNumber::from_regex(input.as_str()).unwrap().0),
-        // also match the numbers 3,5,9,11,13
 
         _ => Err(EntryError::ChordNumberError),
     }
@@ -216,7 +213,6 @@ fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
     let mut i=0;
     // if file doesn't exist, create it
     let destination = format!("../progressions/{}.txt",file_name);
-    // let destination = format!("../{}.txt",file_name);
 
     let file = std::fs::File::create(destination.clone()).unwrap();
     let mut file = fs::OpenOptions::new().write(true).append(true).open(destination.clone()).unwrap();
@@ -364,8 +360,6 @@ fn create_progression(){
         let quality= get_quality();
                 let extension: ChordNumber = get_chord_number();
 
-        
-    
         // store quality as a Quality converted from &str regex to Quality
         
         let chord = Chord::new(root, quality, extension);
