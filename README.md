@@ -1,5 +1,5 @@
 # Notation
-Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasikci/rust-music-theory) to offer users a way to interface with music theory and output midi audio files programmatically. The application is designed to aid people with cognitive dissabilities such as dyslexia and dysgraphia compose music and is currently in early development by [Max Pugh](https://github.com/mpughcs). Feel free to read the research that I've conducted so far in my creation of the project by clicking [here](https://docs.google.com/document/d/1OCA0tEyqHBICmjfixRG9KccoVjolyWdcGs7ToGMROmg/edit?usp=sharing)
+Notation builds upon the [Rust Music Theory Library](https://github.com/ozankasikci/rust-music-theory) to offer users a way to interface with music theory and output midi audio files programmatically. The application is designed to aid people with cognitive dissabilities such as dyslexia and dysgraphia compose music and is currently in early development by [Max Pugh](https://github.com/mpughcs). Feel free to read the research that I've conducted so far in my creation of the project by clicking [here](https://docs.google.com/document/d/1OCA0tEyqHBICmjfixRG9KccoVjolyWdcGs7ToGMROmg/edit?usp=sharing).
 <!-- add table of contents -->
 # Table of Contents
 - [Notation](#notation)
