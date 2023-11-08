@@ -1,7 +1,7 @@
 extern crate rust_music_theory as rustmt;
 use rustmt::note::{Note, Notes, PitchClass};
 use rustmt::scale::{Scale, ScaleType, Mode, Direction};
-use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality};
+use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality, self};
 use text_io::scan;
 use std::{io, fs};
 use colored::Colorize;
@@ -253,32 +253,7 @@ fn view_notes_in_scale(){
 
     let mode:Mode = get_mode();
     let direction:String = inline_user_input("Enter the direction of the scale (asc/desc): ");
-
-    
-    
     let scale_direction: Direction;
-
-
-    // rust is strongly typed, needing to redeclare variable here instead of just mutating it. This leads to less bugs but adds a line of redundant code. types are known at runtime
-    
-    // if direction.to_uppercase() =="ASC"{
-    //     scale_direction = Direction::Ascending;
-    // } else if direction.to_uppercase() =="DESC"{
-    //     scale_direction = Direction::Descending;
-    // } else {
-    //     println!("Invalid direction. Defaulting to ascending.");
-    //     scale_direction = Direction::Ascending;
-    // }
-
-    // // creating scale object
-    // let usr_scale = Scale::new(
-    //     ScaleType::from_mode(mode),    // scale type
-    //     tonic,    // tonic
-    //     4,                      // octave
-    //     Some(mode),     // scale mode
-    //     scale_direction,   // scale direction
-    // ).unwrap();
-    // let user_notes = &usr_scale.notes();
     let user_notes = &scale_as_vector(tonic,mode,direction);
     // print all notes in user_notes followed by a newline
     
@@ -288,6 +263,31 @@ fn view_notes_in_scale(){
     pause();
 }
 
+// takes in the chord progression struct and writes it to a file with the given name
+// fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
+//     let mut i=0;
+//     // if file doesn't exist, create it
+//     let destination = format!("../progressions/{}.txt",file_name);
+
+//     let file = std::fs::File::create(destination.clone()).unwrap();
+//     let mut file = fs::OpenOptions::new().write(true).append(true).open(destination.clone()).unwrap();
+    
+//     writeln!(file,"{}", to_write.get_num_chords()).unwrap();
+//     writeln!(file,"-").unwrap();
+//     while i < to_write.get_num_chords(){
+        // let iterator = i as usize;
+        // let notes_to_add = chord_as_vector(to_write.chord_progression[iterator].root, to_write.chord_progression[iterator].quality,to_write.chord_progression[iterator].number);
+//         let note_count=notes_to_add.len();
+//         writeln!(file,"{}", note_count).unwrap();
+//         append_notes_to_file(&notes_to_add,&destination);
+//         if i!= to_write.get_num_chords()-1{
+//             writeln!(file,"-").unwrap();
+//         }
+//         i+=1;
+//     }
+//     println!("Progression written to {}",destination.green());
+//     pause();
+// }
 
 
 // takes in 
@@ -344,7 +344,7 @@ fn display_options(){
         match input.as_str(){
             "1" => view_notes_in_scale(),
             "2" => view_notes_in_chord(),
-            "3" => create_progression(),
+            // "3" => create_progression(),
             "4" => help(),
             "5" => break,
             _ => println!("{}", "Invalid Input, Try again".red())
@@ -354,64 +354,43 @@ fn display_options(){
 
 }
 
+// as a rest api, we don't need to output to the console anymore
+// this should be changed to create_progression(name: &str, chords: Vec<Chord>) -> ChordProgression as json
+// and then we can return the json to the user
 
-fn create_progression(){
-    let mut prog_name= inline_user_input("Enter the name of your chord progression: ").to_owned();
-    if prog_name.len()==0 {
-        println!("Invalid name. Defaulting to 'progression'");
-        prog_name="progression".to_string();
-    }
-    
-    let num_chords=inline_user_input("How many chords will be in your progression?: ").parse::<i32>().unwrap();
-    let mut i: i32=0;
-    let mut user_chords:ChordProgression= ChordProgression::new(prog_name.clone());
-    // convert prog_name to &str
-    
-    while i < num_chords{
-        println!("Chord {} ",format!("{}", (&i+1).to_string().green()));
-        let root:PitchClass= get_tonic();
-        let quality= get_quality();
-                let extension: ChordNumber = get_chord_number();
-
-        // store quality as a Quality converted from &str regex to Quality
-        
-        let chord = Chord::new(root, quality, extension);
-        user_chords.add_chord(chord);
-        i+=1;
-    }
-    // pass chord progression and progto function that writes to file
-    write_prog_to_file(&user_chords, &prog_name);
-  
-}
 
 // fn main() {
 //     display_options();
 // }
 #[get("/scale/<tonic>/<mode>/<direction>")]
 fn scale(tonic: &str, mode: &str, direction: String ) -> String {
-    let tonict = PitchClass::from_str(tonic).unwrap();
-    let modet = Mode::from_regex(mode).unwrap().0;
-    // let directiont = Direction::Ascending;
-    // scale_as_vector(tonict, modet, direction);
     let mut to_return = String::new();
-    for note in scale_as_vector(tonict, modet, direction) {
+    for note in scale_as_vector(PitchClass::from_str(tonic).unwrap(), Mode::from_regex(mode).unwrap().0, direction) {
         to_return.push_str(&format!("{}\n", note));
     }
-    
-    
-
     return to_return;
 }
 
-#[get("/hello/<name>/<age>/<cool>")]
-fn hello(name: &str, age: u8, cool: bool) -> String {
-    if cool {
-        format!("You're a cool {} year old, {}!", age, name)
-    } else {
-        format!("{}, we need to talk about your coolness.", name)
+#[get("/chord/<root>/<quality>/<extension>")]
+fn get_chord(root: &str, quality: &str, extension: &str) -> String {
+    let mut to_return = String::new();
+    let chord = chord_as_vector(PitchClass::from_str(root).unwrap(), ChordQuality::from_regex(quality).unwrap().0, ChordNumber::from_regex(extension).unwrap().0);
+    to_return.push_str(&format!("{}\n", chord.len()).to_string());
+    for note in chord {
+        to_return.push_str(&format!("{}, {}\n", note, note.octave).to_string());
     }
+    to_return
+
 }
+
+#[get("/")]
+fn intstructions() -> String {
+    return "Welcome to the Rust Music Theory API! To use this API, you can use the following endpoints:\n
+    /scale/<tonic>/<mode>/<direction>\n
+    /chord/<root>/<quality>/<extension>\n".to_string();
+}
+
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![scale])
+    rocket::build().mount("/", routes![scale, intstructions,get_chord])
 }
