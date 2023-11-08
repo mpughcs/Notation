@@ -8,6 +8,7 @@ use colored::Colorize;
 use std::io::{stdin, stdout, Read, Write};
 mod chord_progression;
 use crate::chord_progression::chord_progression::*;
+#[macro_use] extern crate rocket;
 
 // function to display helpful information to the user
 fn help(){
@@ -178,12 +179,22 @@ fn get_tonic() -> PitchClass{
 
 
 // allow unused because this is a helper function
-#[allow(unused)]
+// #[allow(unused)]
 // scale_as_vector returns a vector of notes from a scale
-fn scale_as_vector(tonic: PitchClass,mode: Mode, direction: Direction ) -> Vec<Note> {
-    let scale1 = Scale::new(ScaleType::from_mode(mode), tonic, 4,Some(mode),direction).unwrap();
+fn scale_as_vector(tonic: PitchClass,mode: Mode, direction: String ) -> Vec<Note> {
+    let scale_direction: Direction;
+    if direction.to_uppercase() =="ASC"{
+        scale_direction = Direction::Ascending;
+    } else if direction.to_uppercase() =="DESC"{
+        scale_direction = Direction::Descending;
+    } else {
+        println!("Invalid direction. Defaulting to ascending.");
+        scale_direction = Direction::Ascending;
+    }
+    let scale1 = Scale::new(ScaleType::from_mode(mode), tonic, 4,Some(mode),scale_direction).unwrap();
     return scale1.notes();
 }
+
 
 // print_scale prints a vector of notes
 fn print_scale(scale: &Vec<Note>) {
@@ -234,6 +245,8 @@ fn write_prog_to_file(to_write:&ChordProgression, file_name:&str){
     pause();
 }
 
+
+
 fn view_notes_in_scale(){
 
     let tonic= get_tonic();
@@ -248,26 +261,27 @@ fn view_notes_in_scale(){
 
     // rust is strongly typed, needing to redeclare variable here instead of just mutating it. This leads to less bugs but adds a line of redundant code. types are known at runtime
     
-    if direction.to_uppercase() =="ASC"{
-        scale_direction = Direction::Ascending;
-    } else if direction.to_uppercase() =="DESC"{
-        scale_direction = Direction::Descending;
-    } else {
-        println!("Invalid direction. Defaulting to ascending.");
-        scale_direction = Direction::Ascending;
-    }
+    // if direction.to_uppercase() =="ASC"{
+    //     scale_direction = Direction::Ascending;
+    // } else if direction.to_uppercase() =="DESC"{
+    //     scale_direction = Direction::Descending;
+    // } else {
+    //     println!("Invalid direction. Defaulting to ascending.");
+    //     scale_direction = Direction::Ascending;
+    // }
 
-    // creating scale object
-    let usr_scale = Scale::new(
-        ScaleType::from_mode(mode),    // scale type
-        tonic,    // tonic
-        4,                      // octave
-        Some(mode),     // scale mode
-        scale_direction,   // scale direction
-    ).unwrap();
-    let user_notes = &usr_scale.notes();
-
+    // // creating scale object
+    // let usr_scale = Scale::new(
+    //     ScaleType::from_mode(mode),    // scale type
+    //     tonic,    // tonic
+    //     4,                      // octave
+    //     Some(mode),     // scale mode
+    //     scale_direction,   // scale direction
+    // ).unwrap();
+    // let user_notes = &usr_scale.notes();
+    let user_notes = &scale_as_vector(tonic,mode,direction);
     // print all notes in user_notes followed by a newline
+    
     print_scale(user_notes);
     write_notes_to_file(user_notes);
     println!("Scale written to {}","../scale.txt".green());
@@ -288,7 +302,6 @@ fn view_notes_in_chord(){
   
     // store quality as a Quality converted from &str regex to Quality
    
-
     let chord = Chord::new(root, qual, extension);
     
 
@@ -371,6 +384,34 @@ fn create_progression(){
   
 }
 
-fn main() {
-    display_options();
+// fn main() {
+//     display_options();
+// }
+#[get("/scale/<tonic>/<mode>/<direction>")]
+fn scale(tonic: &str, mode: &str, direction: String ) -> String {
+    let tonict = PitchClass::from_str(tonic).unwrap();
+    let modet = Mode::from_regex(mode).unwrap().0;
+    // let directiont = Direction::Ascending;
+    // scale_as_vector(tonict, modet, direction);
+    let mut to_return = String::new();
+    for note in scale_as_vector(tonict, modet, direction) {
+        to_return.push_str(&format!("{}\n", note));
+    }
+    
+    
+
+    return to_return;
+}
+
+#[get("/hello/<name>/<age>/<cool>")]
+fn hello(name: &str, age: u8, cool: bool) -> String {
+    if cool {
+        format!("You're a cool {} year old, {}!", age, name)
+    } else {
+        format!("{}, we need to talk about your coolness.", name)
+    }
+}
+#[launch]
+fn rocket() -> _ {
+    rocket::build().mount("/", routes![scale])
 }
