@@ -372,6 +372,5 @@ fn create_progression(){
 }
 
 fn main() {
-   
     display_options();
 }

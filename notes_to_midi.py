@@ -116,13 +116,15 @@ def scale_to_midi(list_of_notes):
 def progression_to_midi(chords,output_file):
   channel = 0
   volume = 100
+  length = 2
+
   # print(chords)
   for i,chord in enumerate(chords):
     for j,note in enumerate(chord.note_list):
       note=Note(note.split(",")[0],note.split(",")[1])
       pitch = midi_from_note(note.name,note.octave)          # C4 (middle C)
-      time = i*8          # start on beat equal to it's index in the list of notes passed
-      duration = 8        # 2 beat long
+      time = i*length          # start on beat equal to it's index in the list of notes passed
+      duration = length        # 2 beat long
       mf.addNote(track, channel, pitch, time, duration, volume)
   # print("reached here")
   output_file="MidiProg/"+output_file
@@ -134,7 +136,6 @@ def get_path():
     # we are running in a bundle
     bundle_dir = sys._MEIPASS
   else:
-    # we are running in a normal Python environment
     bundle_dir = os.path.dirname(os.path.abspath(__file__))
   return bundle_dir
 
