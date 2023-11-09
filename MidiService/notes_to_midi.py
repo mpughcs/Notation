@@ -2,12 +2,23 @@
 import sys
 import os
 from midiutil.MidiFile import MIDIFile
+from flask import Flask
+
+
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello_world():
+    return "<p>Hello, World!</p>"
+
 mf = MIDIFile(1)     # only 1 track
 track = 0   # the only track
 time = 0    # start at the beginning
 
 mf.addTrackName(track, time, "Sample Track")
 mf.addTempo(track, time, 120)
+
 
 # create a class for a musical note
 class Note: 
@@ -153,14 +164,6 @@ def process_scale():
   print("Notes read")
   scale_to_midi(notes)
 
-def process_progression(file):
-  fileTxt="progressions/"+file+".txt"
-  print(fileTxt)
-  chordList=get_chords_from_file(fileTxt)
-  print("File read")
-  progression_to_midi(chordList,file)
-  print("Midi file written")
-
 def scaleOrChord():
   while(True):
     print("Choose an option: ")
@@ -197,10 +200,36 @@ def scaleOrChord():
     else:
       print("Invalid input, please try again")
       
-scaleOrChord()
+def process_progression(file):
+  fileTxt="progressions/"+file+".txt"
+  print(fileTxt)
+  chordList=get_chords_from_file(fileTxt)
+  print("File read")
+  progression_to_midi(chordList,file)
+  print("Midi file written")
+
+# scaleOrChord()
 # shutil.which('python')
 # print(get_path())
 # self=sys.stdin.read().strip()
 # __main__=sys.stdin.read().strip()
 
 # print(file) 
+@app.route("/progression/<notation>", methods=['GET'])
+def progression_to_midi(notation):
+  return notation
+  # channel = 0
+  # volume = 100
+  # length = 2
+
+  # # print(chords)
+  # for i,chord in enumerate(chords):
+  #   for j,note in enumerate(chord.note_list):
+  #     note=Note(note.split(",")[0],note.split(",")[1])
+  #     pitch = midi_from_note(note.name,note.octave)          # C4 (middle C)
+  #     time = i*length          # start on beat equal to it's index in the list of notes passed
+  #     duration = length        # 2 beat long
+  #     mf.addNote(track, channel, pitch, time, duration, volume)
+  # # print("reached here")
+  # output_file="MidiProg/"+output_file
+  # write_to_disk(output_file)
