@@ -2,7 +2,7 @@
 import sys
 import os
 from midiutil.MidiFile import MIDIFile
-from flask import Flask
+from flask import Flask, request, jsonify
 
 
 
@@ -25,7 +25,6 @@ class Note:
   def __init__(self, name, octave):
     self.name = name
     self.octave = octave
-
   def __repr__(self):
     return f"{self.name},{self.octave}"
 
@@ -142,27 +141,9 @@ def progression_to_midi(chords,output_file):
   write_to_disk(output_file)
 
 # defining path to .txt file for once the program is an executable using pyinstaller
-def get_path():
-  if getattr(sys, 'frozen', False):
-    # we are running in a bundle
-    bundle_dir = sys._MEIPASS
-  else:
-    bundle_dir = os.path.dirname(os.path.abspath(__file__))
-  return bundle_dir
-
-def print_available_progressions():
-  print("Available progressions: ")
-  for file in os.listdir("progressions"):
-    if file.endswith(".txt"):
-      print("\t"+file[:-4])
 
 
 
-
-def process_scale():
-  notes=get_notes_from_file("scale.txt")
-  print("Notes read")
-  scale_to_midi(notes)
 
 def scaleOrChord():
   while(True):
@@ -215,9 +196,10 @@ def process_progression(file):
 # __main__=sys.stdin.read().strip()
 
 # print(file) 
-@app.route("/progression/<notation>", methods=['GET'])
+@app.route("/progression/<notation>", methods=['Get'])
 def progression_to_midi(notation):
-  return notation
+  request_data = request.get_json()
+  return request_data
   # channel = 0
   # volume = 100
   # length = 2

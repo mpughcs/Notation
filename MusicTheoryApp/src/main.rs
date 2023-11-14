@@ -3,9 +3,17 @@ use rustmt::note::{Note, Notes, PitchClass};
 use rustmt::scale::{Scale, ScaleType, Mode, Direction};
 use rustmt::chord::{Chord, Number as ChordNumber, Quality as ChordQuality, self};
 mod chord_progression;
+use rocket::serde::json::Json;
+use rocket::http::Header;
+use rocket::{Request, Response};
+use rocket::fairing::{Fairing, Info, Kind};
+
 #[macro_use] extern crate rocket;
 
 // function to display helpful information to the user
+
+
+
 
 #[get("/help")]
 fn help() -> String{
@@ -91,6 +99,24 @@ fn chord_as_vector(root:PitchClass,quality:ChordQuality,extension:ChordNumber)->
 }
 
 
+pub struct CORS;
+
+#[rocket::async_trait]
+impl Fairing for CORS {
+    fn info(&self) -> Info {
+        Info {
+            name: "Attaching CORS headers to responses",
+            kind: Kind::Response
+        }
+    }
+
+    async fn on_response<'r>(&self, _request: &'r Request<'_>, response: &mut Response<'r>) {
+        response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
+        response.set_header(Header::new("Access-Control-Allow-Methods", "POST, GET, PATCH, OPTIONS"));
+        response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
+        response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
+    }
+}
 // fn main() {
 //     display_options();
 // }
@@ -106,14 +132,14 @@ fn scale(tonic: &str, mode: &str, direction: String ) -> String {
 
 // this endpoint takes a root, quality, and extension and returns a vector of notes
 #[get("/chord/<root>/<quality>/<extension>")]
-fn get_chord(root: &str, quality: &str, extension: &str) -> String {
+fn get_chord(root: &str, quality: &str, extension: &str) -> String{
     let mut to_return = String::new();
     let chord = chord_as_vector(PitchClass::from_str(root).unwrap(), ChordQuality::from_regex(quality).unwrap().0, ChordNumber::from_regex(extension).unwrap().0);
     to_return.push_str(&format!("{}\n", chord.len()).to_string());
     for note in chord {
         to_return.push_str(&format!("{},{}\n", note, note.octave).to_string());
     }
-    to_return
+    return to_return;
 }
 
 #[get("/")]
@@ -127,5 +153,7 @@ fn intstructions() -> String {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![scale, intstructions,get_chord,help])
+    rocket::build().attach(CORS)
+    .mount("/", routes![scale, intstructions,get_chord,help]
+)
 }
