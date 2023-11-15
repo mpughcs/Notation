@@ -3,45 +3,46 @@ import axios from 'axios';
 
 const API_URL = 'http://127.0.0.1:8000';
 
-
-
 function getChord(tonic, quality, chordType) {
-    axios.get(`${API_URL}/chord/${tonic}/${quality}/${chordType}`)
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });  
-  }
+    return axios.get(`${API_URL}/chord/${tonic}/${quality}/${chordType}`);
+}
+
 
 class Chord extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            tonic: '',
+            quality: '',
+            extension: '',
             // define your state here
         };
     }
-    handleSubmit = (e) => {
-        e.preventDefault(); // Prevent the default form submission behavior
-      
-        const formData = new FormData(e.target); // Create a FormData object from the form
-      
-        const tonic = formData.get("tonic");
-        const quality = formData.get("quality");
-        const extension = formData.get("extension");
-      
-        // Now you can use the values of the form fields (tonic, quality, extension) as needed
-        getChord(tonic, quality, extension);
-      
-        // You can also update the component's state or make API calls here
-      };
+    
+    handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        this.tonic = formData.get("tonic");
+        this.quality = formData.get("quality");
+        this.extension = formData.get("extension");
+
+        try {
+            const response = await getChord(this.tonic, this.quality, this.extension);
+            console.log(response.data);
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    
+
 
     render() {
         return (
             <div className=' hover:translate-x-[.1rem] duration-150 bg-slate-50 text-gray-600 p-2 rounded-lg drop-shadow-xl'>
                 {/* Your JSX goes here */}
-                <form className='flex-col gap-2 text-white' onSubmit = {this.handleSubmit} >
+                <form className='flex-col gap-2 text-white' onSubmit={this.handleSubmit} >
                     <div className='flex gap-2 pt-3 flex-nowrap'>
                         <h1 className='text-black inline-block min-w-max'>Tonic</h1>
                         <select className='px-1 inline-block w-min h-min flex-1 bg-opacity-0' name="tonic" >
@@ -67,7 +68,7 @@ class Chord extends React.Component {
                             <option value="minor">Minor</option>
                             <option value="diminished">Diminished</option>
                             <option value="augmented">Augmented</option>
-                            <option value="halfDiminished">HalfDiminished</option>
+                            <option value="halfdiminished">HalfDiminished</option>
                             <option value="dominant">Dominant</option>
                             <option value="suspended2">Sus2</option>
                             <option value="suspended4">Sus4</option>
@@ -80,7 +81,7 @@ class Chord extends React.Component {
                             <option value="triad">Triad</option>
                             <option value="seventh">Seventh</option>
                             <option value="majorseventh">Maj7</option>
-                            <option value="ninth">Ninth</option>
+                            <option value="Ninth">Ninth</option>
                             <option value="eleventh">Eleventh</option>
                             <option value="thirteenth">Thirteenth</option>
                         </select>

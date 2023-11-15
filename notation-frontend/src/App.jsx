@@ -7,27 +7,36 @@ import { RiAiGenerate } from 'react-icons/ri';
 import axios from 'axios';
 import Chord from './Chord';
 const API_URL = 'http://127.0.0.1:8000';
+import React from 'react';
+import ChordList from './ChordList';
 
 
-var chord = [];
 
-console.log(chord.toString());
 
-function getChord(tonic, quality, chordType) {
-  axios.get(`${API_URL}/chord/${tonic}/${quality}/${chordType}`)
-  .then(function (response) {
-    console.log(response.data);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });  
-}
-
-  
-// chords stuct 
-function App() {
+// c component?
+//A:
+function App(props) {
   const [count, setCount] = useState(0)
+  const [chords, setChords] = useState([]);
   
+
+  function addChord() {
+    setChords([...chords, <Chord key={chords.length} />]);
+  }
+  
+  // create a div
+ 
+  const handleChordSubmit = (chordData) => {
+    // Handle form data here
+    console.log(chordData);
+  };
+  
+
+  async function generateProgression() {
+    doc.getElementById('chord').onSubmit();
+    // You can now access the form data in handleChordSubmit function
+  }
+
   return (
     <div className="App px-10 pt-3 h-screen bg-gradient-to-tr from-black to-blue-950">
       <Head>
@@ -56,19 +65,9 @@ function App() {
         </nav>
 
         {/* project section */}
+        <ChordList />
+        
 
-        <div className='my-4 mx-10 flex-col  hover:translate-x-[.1rem] duration-150 opacity-40 bg-gray-50 text-gray-600 p-4 rounded-lg'>
-          <h1 className='text-2xl font-mulish'>Your Progression: </h1>
-          <div className='flex gap-4 my-4'>
-            <button onClick={() => testApi('c','minor', 'eleventh')} className="flex-col  hover:translate-x-[.1rem] duration-150 bg-slate-50 text-gray-600 p-2 rounded-lg drop-shadow-xl">
-              <BiPlusMedical className='text-5xl mx-auto text-green-500' />
-              New Chord
-            </button>
-            <Chord />
-          </div>
-
-
-        </div>
 
       </div>
     </div>
