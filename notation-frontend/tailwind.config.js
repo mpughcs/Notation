@@ -4,8 +4,31 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+
+
+      cassetteBlack: '#161513',
+      cassetteWhite: '#fffbf2',
+      cassettePink: '#ec5574',
+      cassetteYellow: '#efeb6d',
+      cassetteOrange: '#ef7b52',
+      cassetteGreen: '#268043',
+      cassetteBlue: '#278acd',
+
+
+
+    },
+    fontFamily: {
+      // 'Bungee Shade', sans-serif;
+      // font-family: 'Rampart One', sans-serif;
+      // font-family: 'Barlow', sans-serif;
+      'Barlow': ['Barlow', 'sans-serif'],
+      'Bungee': ['Bungee Shade', 'sans-serif'],
+      'Rampart': ['Rampart One', 'sans-serif'],
+    },
   },
   plugins: [],
+}
 }
 

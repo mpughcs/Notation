@@ -19,6 +19,7 @@ class Chord extends React.Component {
         };
     }
     
+    
     handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -40,9 +41,9 @@ class Chord extends React.Component {
 
     render() {
         return (
-            <div className=' hover:translate-x-[.1rem] duration-150 bg-slate-50 text-gray-600 p-2 rounded-lg drop-shadow-xl'>
+            <div className=' hover:translate-x-[.1rem] bg-cassetteWhite text-gray-600 p-2  rounded-lg drop-shadow-xl duration-150 '>
                 {/* Your JSX goes here */}
-                <form className='flex-col gap-2 text-white' onSubmit={this.handleSubmit} >
+                <form className=' gap-2 text-white' onSubmit={this.handleSubmit} >
                     <div className='flex gap-2 pt-3 flex-nowrap'>
                         <h1 className='text-black inline-block min-w-max'>Tonic</h1>
                         <select className='px-1 inline-block w-min h-min flex-1 bg-opacity-0' name="tonic" >
@@ -89,7 +90,7 @@ class Chord extends React.Component {
                     </div>
                     {/* submission button */}
                     <div className='flex gap-2 pt-3 flex-nowrap'>
-                        <button className='px-2 py-1 bg-green-500 rounded-lg' type="submit">testAPI</button>
+                        <button className='px-2 py-1 bg-cassettePink rounded-lg' type="submit">testAPI</button>
                     </div>
                 </form>
 
