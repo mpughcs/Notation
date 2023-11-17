@@ -11,45 +11,19 @@ import React from 'react';
 import ChordList from './ChordList';
 
 
-
-
-
-
-// c component?
-//A:
 function App(props) {
   const [count, setCount] = useState(0)
   const [chords, setChords] = useState([]);
 
-
-  function addChord() {
-    setChords([...chords, <Chord key={chords.length} />]);
-  }
-
-  // create a div
-
-  const handleChordSubmit = (chordData) => {
-    // Handle form data here
-    console.log(chordData);
-  };
-
-
-  async function generateProgression() {
-    doc.getElementById('chord').onSubmit();
-    // You can now access the form data in handleChordSubmit function
-  }
+  
 
   return (
     <div className="App p-5 h-screen bg-cassetteBlack relative z-40 ">
       <div className="m-2 p-2 h-[80%] rounded-lg bg-cassetteWhite relative z-10 mt-5 ">
-        <Head>
-          <title>Notation</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
         <div className=''>
           <nav className="m-3  flex justify-between text-neutral-600">
             <div className='flex flex-col'>
-              <h1 className="font-Bungee text-3xl lg:text-8xl ">
+              <h1 className="font-Bungee text-4xl lg:text-8xl ">
                 Notation
               </h1>
               {/* i need a good one liner to describe the app */}
@@ -64,27 +38,43 @@ function App(props) {
                   About
                 </a>
               </li>
-              
             </ul>
           </nav>
+          <div className=''>
 
-          {/* project section */}
-          {/* stripes of cassette */}
-          {/* i want these to be behind the chord list */}
-          <div className='absolute lg:top-[11.5rem] left-0 w-full z-10'>
-            <div className='bg-cassettePink m-0 h-12'></div>
-            <div className='bg-cassetteOrange m-0 w-full h-12'></div>
-            <div className='bg-cassetteYellow m-0 w-full h-12'></div>
-            <div className='bg-cassetteGreen m-0 w-full h-12'></div>
-            <div className='bg-cassetteBlue m-0 w-full h-12'></div>
+            
+            <div className='absolute top-[10rem] md:top-[8rem] lg:top-[11.6rem] left-0 w-full z-10'>
+              <div className='bg-cassettePink m-0 h-14'></div>
+              <div className='bg-cassetteOrange m-0 w-full h-14'></div>
+              <div className='bg-cassetteYellow m-0 w-full h-14'></div>
+              <div className='bg-cassetteGreen m-0 w-full h-14'></div>
+              <div className='bg-cassetteBlue m-0 w-full h-14'></div>
+            </div>
+
+
+
+            {/* Chord list */}
+            <div className='p-2 relative z-20 '><ChordList /></div>
           </div>
-
-          {/* Chord list */}
-          <div className='p-2 relative z-20'><ChordList /></div>
-
         </div>
-
+        <div className='flex justify-end py-11 px-3'>
+          <span className='text-3xl font-Caveat text-cassetteBlack px-3'> BPM: </span>
+          <input type="number" name="progressionName" defaultValue="120" className='text-3xl resize-none relative p-1 font-Caveat text-cassetteWhite w-20' id="" cols="30" rows="1"></input>
+        </div>
       </div>
+
+      <p className='text-center py-7 font-Barlow text-gray-600'>
+
+        <span className='text-cassettePink'> generate </span>
+        <span className='text-cassetteOrange'> midi </span>
+        <span className='text-cassetteYellow'> chord </span>
+        <span className='text-cassetteGreen'> progressions </span>
+
+      </p>
+      <div className='trapezoid'></div>
+
+
+
 
     </div>
 

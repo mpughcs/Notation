@@ -23,9 +23,11 @@ export default {
       // 'Bungee Shade', sans-serif;
       // font-family: 'Rampart One', sans-serif;
       // font-family: 'Barlow', sans-serif;
+      // font-family: 'Caveat', cursive;
       'Barlow': ['Barlow', 'sans-serif'],
       'Bungee': ['Bungee Shade', 'sans-serif'],
       'Rampart': ['Rampart One', 'sans-serif'],
+      'Caveat': ['Caveat', 'cursive'],
     },
   },
   plugins: [],

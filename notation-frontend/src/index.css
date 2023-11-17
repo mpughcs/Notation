@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Croissant+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rampart+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Barlow&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,4 +20,22 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none;
+}
+
+.trapezoid {
+	border-bottom: 50px solid #101010;
+	border-left: 25px solid transparent;
+	border-right: 25px solid transparent;
+  
+	height: 0;
+	width: 90%;
+  position: relative;
+  margin: 0 auto;
+
 }

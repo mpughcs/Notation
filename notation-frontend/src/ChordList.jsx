@@ -1,95 +1,119 @@
+
 import React, { useState } from 'react';
 import Chord from './Chord';
 import { BiPlusMedical } from 'react-icons/bi';
 import { RiAiGenerate } from 'react-icons/ri';
-import { RiFileMusicFill } from "react-icons/ri";
-import { GrMusic } from "react-icons/gr";
+import { RiFileMusicFill } from 'react-icons/ri';
+import { GrMusic } from 'react-icons/gr';
 
-class ChordList extends React.Component {
-    constructor(props) {
-        super(props); // Make sure to call the super constructor
+const ChordList = () => {
+    const [chords, setChords] = useState([]);
+    const [responses, setResponses] = useState('');
+    const [progressionName, setProgressionName] = useState('My project');
+    const [chordState, setChordState] = useState({});
 
-        this.state = {
-            chords: [],
-            responses: '',
-        };
-    }
 
-    handleChordResponse = (chordResponse) => {
-        this.setState((prevState) => ({
-            responses: prevState.responses + chordResponse + '\n',
-        }));
+    const handleChordResponse = (chordResponse) => {
+        setResponses((prevResponses) => prevResponses + chordResponse + '\n');
     };
 
-    addChord = () => {
-        this.setState((prevState) => ({
-            chords: [
-                ...prevState.chords,
-                <Chord key={prevState.chords.length} onSubmit={this.handleChordResponse} />,
-            ],
-        }));
+    const handleChordStateChange = (chordData) => {
+        setChordState(chordData); // Update the state in the parent component
+        // update it in the list of chords
+
+        console.log('Chord state in parent:', chordData);
     };
-    processProgression = async () => {
-        const { chords } = this.state;
-        let responses = '';
 
-        for (let i = 0; i < chords.length; i++) {
-            const chordComponent = chords[i];
-            if (chordComponent && chordComponent.props) {
-                const { tonic, quality, extension } = chordComponent.props;
+    // const handleChordStateChange = (chordData) => {
+    //     setChords((prevChords) => [...prevChords, chordData]);
+    // };
 
-                try {
-                    const response = await Chord.handleSubmit(tonic, quality, extension);
-                    responses += `${response.data} `;
-                } catch (error) {
-                    console.log(`Error fetching chord: ${error}`);
-                }
+    const getAllChords = () => {
+        // Loop through chord data and create a string
+        const chordDataString = chords
+            .map((chord, index) => {
+                return `Chord ${index + 1}: Tonic - ${chord.tonic}, Quality - ${chord.quality}, Extension - ${chord.extension}`;
+            })
+            .join('\n');
+        
+        // Log the chord data string or use it for your separate API request
+        console.log('Chords Data:', chordDataString);
+
+        // Make your separate API request with chordDataString as the body
+        // Example:
+        // axios.post('YOUR_API_ENDPOINT', { chordData: chordDataString })
+        //   .then(response => {
+        //       console.log(response.data);
+        //   })
+        //   .catch(error => {
+        //       console.error(error);
+        //   });
+    };
+    
+    
+
+
+    const addChord = () => {
+        setChords((prevChords) => [
+            ...prevChords,
+            <Chord key={prevChords.length} onChordStateChange={handleChordStateChange} />,
+        ]);
+    };
+
+    const handleDelete = (index) => {
+        setChords((prevChords) => prevChords.filter((chord, i) => i !== index));
+    };
+
+    const printChordData = () => {
+        console.log('Chords Data:');
+        chords.forEach((chord, index) => {
+            if (chord && chord.props) {
+                const { tonic, quality, extension } = chord.props;
+                console.log(`Chord ${index + 1}: Tonic - ${tonic}, Quality - ${quality}, Extension - ${extension}`);
             }
-        }
-
-        console.log('Processed Progression:', responses);
-        // You can update state or perform any other action with the responses here
+        });
     };
 
-
-    render() {
-        return (
-            <div className='my-4 mx-4 flex-col  bg-cassetteBlack text-gray-600 p-4 rounded-lg z-10'>
-                
-                <span className='text-2xl font-Barlow text-cassetteWhite '> Your Progression: </span>
-                <input name="progressionName" className='text-2xl resize-none relative p-1 font-Barlow text-cassetteWhite' id="" cols="30" rows="1"></input>
-                <div className='flex  gap-4 my-4 items-center justify-between'>
-                    <button
-                        onClick={() => this.addChord()}
-                        className='flex-col hover:translate-x-[.1rem] duration-150 text-cassetteYellow rounded-lg drop-shadow-xl'
-                    >
-                        <BiPlusMedical className='text-5xl mx-auto ' />
-                        New Chord
-                    </button>
-                    <div className=' flex flex-wrap gap-1 kw-[70%]'>
-
-                    {
-                    
-                    this.state.chords.map((chord, index) => (
-                        <div key={index} className=' hover:translate-x-[.1rem] duration-150 rounded-lg drop-shadow-xl '>
+    return (
+        <div className='my-4 mx-4 flex-col bg-cassetteBlack text-gray-600 p-4 rounded-lg z-10 h-[270px]'>
+            <span className='text-2xl font-Barlow text-cassetteWhite'> Your Progression: </span>
+            <input
+                name='progressionName'
+                value={progressionName}
+                onChange={(e) => setProgressionName(e.target.value)}
+                className='text-2xl resize-none relative p-1 font-Caveat text-cassetteWhite'
+                id=''
+                cols='30'
+                rows='1'
+            ></input>
+            <div className='flex gap-4 my-4 items-center justify-between'>
+                <button
+                    onClick={() => addChord()}
+                    className='flex-col hover:translate-x-[.1rem] duration-150 text-cassetteYellow rounded-lg drop-shadow-xl'
+                >
+                    <BiPlusMedical className='text-5xl mx-auto ' />
+                    New Chord
+                </button>
+                <div className=' flex gap-2 w-[70%] overflow-x-auto whitespace-nowrap overflow-y-hidden'>
+                    {chords.map((chord, index) => (
+                        <div key={index} className='flex hover:translate-x-[.1rem] duration-150 rounded-lg drop-shadow-xl'>
                             {chord}
+                            <button
+                                className='px-2 py-1 text-3xl text-cassettePink rounded-lg relative right-8 top-16'
+                                onClick={() => handleDelete(index)}
+                            >
+                                -
+                            </button>
                         </div>
                     ))}
-                    </div>
-
-                    
-                      <button
-                        onClick={() => this.addChord()}
-                        className='flex-col hover:translate-x-[.1rem] duration-150 text-cassettePink rounded-lg drop-shadow-xl'
-                    >
-                        <RiFileMusicFill className='text-5xl mx-auto ' />
-                        Generate File
-                    </button>
                 </div>
-
+                <button onClick={getAllChords} className='flex-col hover:translate-x-[.1rem] duration-150 text-cassettePink rounded-lg drop-shadow-xl'>
+                    <RiFileMusicFill className='text-5xl mx-auto ' />
+                    Generate File
+                </button>
             </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 export default ChordList;

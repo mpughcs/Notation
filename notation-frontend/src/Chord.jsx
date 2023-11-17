@@ -1,52 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const API_URL = 'http://127.0.0.1:8000';
 
-function getChord(tonic, quality, chordType) {
-    return axios.get(`${API_URL}/chord/${tonic}/${quality}/${chordType}`);
-}
+const Chord = ({ onChordStateChange }) => {
+    const [tonic, setTonic] = useState('C');
+    const [quality, setQuality] = useState('major');
+    const [extension, setExtension] = useState('triad');
+    const [responseData, setResponseData] = useState('');
 
 
-class Chord extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            tonic: '',
-            quality: '',
-            extension: '',
-            // define your state here
-        };
-    }
-    
-    
-    handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const formData = new FormData(e.target);
-        this.tonic = formData.get("tonic");
-        this.quality = formData.get("quality");
-        this.extension = formData.get("extension");
-
         try {
-            const response = await getChord(this.tonic, this.quality, this.extension);
+            const response = await axios.get(`${API_URL}/chord/${tonic}/${quality}/${extension}`);
+            const chordData = { tonic, quality, extension };
+            setResponseData(response.data);
+            onChordStateChange(chordData); // Sending state to the parent
             console.log(response.data);
-
         } catch (error) {
             console.log(error);
         }
     };
-    
 
-
-    render() {
-        return (
-            <div className=' hover:translate-x-[.1rem] bg-cassetteWhite text-gray-600 p-2  rounded-lg drop-shadow-xl duration-150 '>
-                {/* Your JSX goes here */}
-                <form className=' gap-2 text-white' onSubmit={this.handleSubmit} >
-                    <div className='flex gap-2 pt-3 flex-nowrap'>
+    return (
+        <div className='hover:translate-x-[.1rem] bg-cassetteWhite text-gray-600 p-2 rounded-lg drop-shadow-xl duration-150'>
+                           <form className=' gap-2 text-white' onSubmit={handleSubmit} >
+                    <div className='gap-2 pt-3 flex-nowrap'>
                         <h1 className='text-black inline-block min-w-max'>Tonic</h1>
-                        <select className='px-1 inline-block w-min h-min flex-1 bg-opacity-0' name="tonic" >
+                        <select className='px-1 inline-block h-min bg-opacity-0' name="tonic"  onChange={(e) => setTonic(e.target.value)} >
                             <option value="C">C</option>
                             <option value="Cs">C#</option>
                             <option value="D">D</option>
@@ -64,7 +47,7 @@ class Chord extends React.Component {
                     </div>
                     <div className='flex gap-2 pt-3 flex-nowrap'>
                         <h1 className='text-black inline-block min-w-max'>Quality</h1>
-                        <select className='px-1 inline-block w-min h-min flex-1' name="quality">
+                        <select className='px-1 inline-block h-min' name="quality" onChange={(e) => setQuality(e.target.value)}>
                             <option value="major">Major</option>
                             <option value="minor">Minor</option>
                             <option value="diminished">Diminished</option>
@@ -78,7 +61,7 @@ class Chord extends React.Component {
                     </div>
                     <div className='flex gap-2 pt-3 flex-nowrap'>
                         <h1 className='text-black inline-block min-w-max'>Extension</h1>
-                        <select className='px-1 inline-block w-min h-min flex-1' name="extension">
+                        <select className='px-1 inline-block w-min h-min' name="extension" onChange={(e) => setExtension(e.target.value)}>
                             <option value="triad">Triad</option>
                             <option value="seventh">Seventh</option>
                             <option value="majorseventh">Maj7</option>
@@ -89,15 +72,13 @@ class Chord extends React.Component {
                         :
                     </div>
                     {/* submission button */}
-                    <div className='flex gap-2 pt-3 flex-nowrap'>
+                    <div className='flex gap-2 pt-3 flex-nowrap justify-between'>
                         <button className='px-2 py-1 bg-cassettePink rounded-lg' type="submit">testAPI</button>
                     </div>
                 </form>
 
-
-            </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 export default Chord;
